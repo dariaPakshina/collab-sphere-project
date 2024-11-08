@@ -1,1 +1,39 @@
 <app-nav-doc-edit></app-nav-doc-edit>
+
+<div class="formField">
+  <div class="mat-form-field">
+    <mat-form-field
+      class="inputForm"
+      appearance="outline"
+      [formGroup]="addForm"
+      (ngSubmit)="onSubmit()"
+    >
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" />
+    </mat-form-field>
+    <section>
+      <div class="example-button-row">
+        <button
+          role="button"
+          mat-stroked-button
+          style="font-weight: 1000"
+          title="Bold"
+        >
+          b
+        </button>
+        <button mat-stroked-button title="Cursive" style="font-style: italic">
+          i
+        </button>
+        <button mat-stroked-button title="Highlight">color</button>
+      </div>
+    </section>
+  </div>
+  <mat-form-field
+    class="textarea"
+    appearance="outline"
+    [formGroup]="addForm"
+    (ngSubmit)="onSubmit()"
+  >
+    <textarea matInput formControlName="content"></textarea>
+  </mat-form-field>
+</div>

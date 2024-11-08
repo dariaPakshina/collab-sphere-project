@@ -1,0 +1,53 @@
+.formField {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 80vh;
+}
+
+.inputForm {
+  width: 60%;
+}
+
+mat-form-field {
+  width: 70%;
+}
+
+.mat-form-field {
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  justify-content: space-between;
+}
+
+.textarea {
+  height: 100% !important;
+}
+
+textarea {
+  resize: none;
+  height: 100% !important;
+}
+
+textarea.mdc-text-field__input {
+  height: 70vh !important;
+}
+
+section {
+  display: table;
+}
+
+.example-button-row {
+  display: table-cell;
+  width: 100%;
+}
+
+.example-button-row .mat-mdc-button-base {
+  margin: 8px 8px 8px 0;
+}
+
+button {
+  border-radius: 5px;
+}
