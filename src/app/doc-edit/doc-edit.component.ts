@@ -35,4 +35,12 @@ export class DocEditComponent implements OnInit {
   onSubmit() {
     console.log(this.addForm.value);
   }
+
+  //--------------------
+
+  onBold() {}
+
+  onItalic() {}
+
+  onColor() {}
 }

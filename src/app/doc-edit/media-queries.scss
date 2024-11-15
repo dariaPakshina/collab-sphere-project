@@ -14,6 +14,12 @@
   }
 }
 
+@media (max-width: 630px) {
+  mat-form-field:first-child {
+    width: 45% !important;
+  }
+}
+
 @media (max-width: 495px) {
   .mat-form-field {
     gap: 0.5rem;

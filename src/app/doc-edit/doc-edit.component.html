@@ -18,13 +18,21 @@
           mat-stroked-button
           style="font-weight: 1000"
           title="Bold"
+          (click)="onBold()"
         >
           b
         </button>
-        <button mat-stroked-button title="Cursive" style="font-style: italic">
+        <button
+          mat-stroked-button
+          title="Cursive"
+          style="font-style: italic"
+          (click)="onItalic()"
+        >
           i
         </button>
-        <button mat-stroked-button title="Highlight">color</button>
+        <button mat-stroked-button title="Highlight" (click)="onColor()">
+          color
+        </button>
       </div>
     </section>
   </div>
