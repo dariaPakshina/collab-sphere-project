@@ -21,7 +21,7 @@ import {
     MatButtonModule,
   ],
   templateUrl: './doc-edit.component.html',
-  styleUrl: './doc-edit.component.scss',
+  styleUrls: ['./doc-edit.component.scss', './media-queries.scss'],
 })
 export class DocEditComponent implements OnInit {
   addForm!: FormGroup;

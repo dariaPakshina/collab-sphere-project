@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  height: 80vh;
+  height: 85vh;
 }
 
 .inputForm {
@@ -50,4 +50,8 @@ section {
 
 button {
   border-radius: 5px;
+}
+
+textarea.mdc-text-field__input[_ngcontent-ng-c721102871] {
+  height: 62vh !important;
 }

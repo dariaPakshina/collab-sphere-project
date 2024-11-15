@@ -1,0 +1,39 @@
+@media (max-width: 950px) {
+  .mat-form-field[_ngcontent-ng-c721102871],
+  mat-form-field[_ngcontent-ng-c721102871] {
+    width: 95% !important;
+  }
+
+  button {
+    padding: 0;
+    min-width: 40px;
+  }
+
+  mat-form-field:first-child {
+    width: 60% !important;
+  }
+}
+
+@media (max-width: 495px) {
+  .mat-form-field {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  mat-form-field:first-child {
+    width: 100% !important;
+  }
+  .mat-form-field {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .example-button-row {
+    text-align: center;
+  }
+
+  section {
+    margin-bottom: 1.2rem;
+  }
+}

@@ -6,7 +6,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 @Component({
   selector: 'app-nav-doc-edit',
   templateUrl: './nav-doc-edit.component.html',
-  styleUrl: './nav-doc-edit.component.scss',
+  styleUrls: ['./nav-doc-edit.component.scss', './media-queries.scss'],
   standalone: true,
   imports: [MatToolbarModule, MatIconModule, MatButtonModule],
 })
