@@ -24,14 +24,45 @@
         </button>
         <button
           mat-stroked-button
-          title="Cursive"
-          style="font-style: italic"
-          (click)="onItalic()"
+          role="button"
+          title="CtrlZ"
+          (click)="onCtrlZ()"
         >
-          i
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="iconArrow"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+            />
+          </svg>
         </button>
-        <button mat-stroked-button title="Highlight" (click)="onColor()">
-          color
+        <button
+          role="button"
+          mat-stroked-button
+          title="CtrlY"
+          (click)="onCtrlY()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="iconArrow"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m15 15 6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3"
+            />
+          </svg>
         </button>
       </div>
     </section>
@@ -42,6 +73,6 @@
     [formGroup]="addForm"
     (ngSubmit)="onSubmit()"
   >
-    <textarea matInput formControlName="content"></textarea>
+    <textarea #textarea matInput formControlName="content"></textarea>
   </mat-form-field>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NavDocEditComponent } from './nav-doc-edit/nav-doc-edit.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -10,6 +10,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { text } from 'stream/consumers';
 @Component({
   selector: 'app-doc-edit',
   standalone: true,
@@ -38,9 +39,30 @@ export class DocEditComponent implements OnInit {
 
   //--------------------
 
-  onBold() {}
+  @ViewChild('textarea', { static: false })
+  textarea?: ElementRef<HTMLTextAreaElement>;
 
-  onItalic() {}
+  onBold() {
+    if (this.textarea) {
+      const start = this.textarea.nativeElement.selectionStart;
+      const end = this.textarea.nativeElement.selectionEnd;
 
-  onColor() {}
+      if (start != end) {
+        const text = this.textarea.nativeElement.value;
+        const selectedText = text.substring(start, end);
+
+        const boldText = `**${selectedText}**`;
+        this.textarea.nativeElement.value =
+          text.substring(0, start) + boldText + text.substring(end);
+      }
+    }
+  }
+
+  onCtrlZ() {
+    document.execCommand('undo');
+  }
+
+  onCtrlY() {
+    document.execCommand('redo');
+  }
 }
