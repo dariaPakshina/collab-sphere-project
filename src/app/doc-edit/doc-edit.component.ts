@@ -37,7 +37,7 @@ export class DocEditComponent implements OnInit {
     console.log(this.addForm.value);
   }
 
-  //--------------------
+  //--------------------------------
 
   @ViewChild('textarea', { static: false })
   textarea?: ElementRef<HTMLTextAreaElement>;
@@ -65,4 +65,6 @@ export class DocEditComponent implements OnInit {
   onCtrlY() {
     document.execCommand('redo');
   }
+
+  // ---------------------------------
 }
