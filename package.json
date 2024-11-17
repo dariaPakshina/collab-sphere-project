@@ -29,6 +29,11 @@
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
   },
+  "overrides": {
+    "@supabase/supabase-js": {
+      "@supabase/auth-js": "2.61.0"
+    }
+  },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.9",
     "@angular/cli": "^18.2.9",
