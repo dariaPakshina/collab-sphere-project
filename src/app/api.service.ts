@@ -1,13 +1,14 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Doc } from './doc.model';
 import { createClient } from '@supabase/supabase-js';
+import { DocsService } from './docs/docs.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
   supabase: any;
-  constructor(private ngZone: NgZone) {
+  constructor(private ngZone: NgZone, private docsService: DocsService) {
     this.ngZone.runOutsideAngular(() => {
       this.supabase = createClient(
         'https://xbjxhogwjbyxwfvvfuit.supabase.co',
@@ -36,22 +37,23 @@ export class ApiService {
   }
 
   //-------------
-  // postDoc(title: string, editTime: string, content: string) {
-  //   const docData: Doc = { title: title, editTime: editTime, content: content };
-  //   this.http
-  //     .post<Doc>('https://toewuctoxgghgiionmsx.supabase.co', docData, {
-  //       observe: 'response',
-  //     })
-  //     .subscribe({
-  //       next: (resData) => {
-  //         console.log(resData.body);
-  //       },
-  //       error: (error) => {
-  //         console.error(error.message);
-  //       },
-  //       complete: () => {
-  //         console.log('Document successfully posted to SupaBase.');
-  //       },
-  //     });
-  // }
+
+  async fetchDocs() {
+    try {
+      const { data, error } = await this.supabase
+        .from('docs')
+        .select('title, edittime, content');
+
+      if (error) {
+        console.error('Error fetching document:', error.message);
+        return;
+      }
+      if (data) {
+        this.docsService.setDocs(data);
+        console.log('Fetched documents:', data);
+      }
+    } catch (error) {
+      console.error('Unexpected error in fetchDocs:', error);
+    }
+  }
 }

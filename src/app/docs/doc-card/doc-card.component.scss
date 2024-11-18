@@ -1,0 +1,54 @@
+.doc-card,
+.doc-card:visited {
+  max-width: 250px;
+  cursor: pointer;
+  transition: all 0.2s;
+  height: 10rem;
+}
+
+mat-card-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 13rem;
+}
+
+mat-card-header {
+  height: 5rem !important;
+}
+
+.card-header {
+  display: flex;
+  flex-direction: row;
+}
+
+.doc-card:hover,
+.doc-card:active {
+  background-color: rgb(243, 243, 255);
+}
+
+// .btn-delete {
+//   color: rgb(194, 93, 93) !important;
+// }
+
+mat-card-subtitle {
+  color: rgb(128, 123, 173) !important;
+}
+
+mat-icon {
+  opacity: 0;
+}
+
+mat-icon {
+  opacity: 0;
+  transition: all 0.1s;
+}
+
+.doc-card:hover mat-icon {
+  opacity: 100%;
+}
+
+mat-icon:hover,
+mat-icon:visited {
+  color: rgb(213, 58, 58);
+}

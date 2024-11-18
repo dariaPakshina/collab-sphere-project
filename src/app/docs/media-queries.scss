@@ -1,0 +1,10 @@
+@media (max-width: 500px) {
+  .name {
+    display: none;
+  }
+
+  mat-toolbar {
+    justify-content: left;
+    margin-bottom: 1rem;
+  }
+}
