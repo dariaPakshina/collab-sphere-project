@@ -8,6 +8,7 @@ import { DocCardComponent } from './doc-card/doc-card.component';
 import { MatButton } from '@angular/material/button';
 import { ApiService } from '../api.service';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-docs',
@@ -17,6 +18,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
     NgFor,
     DocCardComponent,
     MatButton,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
     MatGridListModule,
   ],
   templateUrl: './docs.component.html',
@@ -50,7 +54,6 @@ export class DocsComponent implements OnInit, OnDestroy {
   private async loadDocs() {
     try {
       await this.apiService.fetchDocs(); // Fetch docs and populate service
-      console.log('Docs fetched successfully');
     } catch (error) {
       console.error('Error loading docs:', error);
     }

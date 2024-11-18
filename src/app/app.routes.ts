@@ -3,6 +3,11 @@ import { DocEditComponent } from './doc-edit/doc-edit.component';
 import { DocsComponent } from './docs/docs.component';
 
 export const routes: Routes = [
-  { path: 'doc-edit', component: DocEditComponent },
-  { path: 'docs', component: DocsComponent },
+  {
+    path: 'doc-edit',
+    title: 'Edit | CollabSphere',
+    component: DocEditComponent,
+  },
+  { path: 'docs', title: 'Documents | CollabSphere', component: DocsComponent },
+  { path: '', redirectTo: '/docs', pathMatch: 'full' },
 ];

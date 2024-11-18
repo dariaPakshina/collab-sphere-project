@@ -50,7 +50,6 @@ export class ApiService {
       }
       if (data) {
         this.docsService.setDocs(data);
-        console.log('Fetched documents:', data);
       }
     } catch (error) {
       console.error('Unexpected error in fetchDocs:', error);

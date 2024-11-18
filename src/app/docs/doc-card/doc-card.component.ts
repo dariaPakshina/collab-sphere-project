@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { Doc } from '../../doc.model';
 import { NgIf, SlicePipe } from '@angular/common';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-doc-card',
@@ -16,6 +17,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     SlicePipe,
     MatGridListModule,
     NgIf,
+    RouterLink,
+    RouterLinkActive,
   ],
   templateUrl: './doc-card.component.html',
   styleUrl: './doc-card.component.scss',

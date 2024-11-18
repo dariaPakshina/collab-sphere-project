@@ -5,13 +5,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ApiService } from '../../api.service';
 import { Doc } from '../../doc.model';
 import { EventEmitter } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-nav-doc-edit',
   templateUrl: './nav-doc-edit.component.html',
   styleUrls: ['./nav-doc-edit.component.scss', './media-queries.scss'],
   standalone: true,
-  imports: [MatToolbarModule, MatIconModule, MatButtonModule],
+  imports: [MatToolbarModule, MatIconModule, MatButtonModule, RouterLink],
 })
 export class NavDocEditComponent {
   @Output() btnClick = new EventEmitter<void>();

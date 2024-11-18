@@ -1,23 +1,27 @@
-<mat-card class="doc-card" appearance="outlined">
-  <mat-card-header>
-    <mat-card-title *ngIf="doc!.title.length > 20; else elseBlock1"
-      >{{ doc!.title | slice : 0 : 20 }}...<mat-icon #iconClose
-        >close</mat-icon
-      ></mat-card-title
+<a [routerLink]="[index]" routerLinkActive="router-link-active"
+  ><mat-card class="doc-card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title *ngIf="doc!.title.length > 20; else elseBlock1"
+        >{{ doc!.title | slice : 0 : 20 }}...<mat-icon #iconClose
+          >close</mat-icon
+        ></mat-card-title
+      >
+      <ng-template #elseBlock1
+        ><mat-card-title
+          >{{ doc!.title }}<mat-icon #iconClose>close</mat-icon></mat-card-title
+        ></ng-template
+      >
+      <mat-card-subtitle>{{
+        doc?.edittime | slice : 4 : 15
+      }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content *ngIf="doc!.content.length > 45; else elseBlock2">
+      <p>{{ doc?.content | slice : 0 : 45 }}...</p>
+    </mat-card-content>
+    <ng-template #elseBlock2
+      ><mat-card-content>
+        <p>{{ doc?.content }}</p>
+      </mat-card-content></ng-template
     >
-    <ng-template #elseBlock1
-      ><mat-card-title
-        >{{ doc!.title }}<mat-icon #iconClose>close</mat-icon></mat-card-title
-      ></ng-template
-    >
-    <mat-card-subtitle>{{ doc?.edittime | slice : 4 : 15 }}</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content *ngIf="doc!.content.length > 45; else elseBlock2">
-    <p>{{ doc?.content | slice : 0 : 45 }}...</p>
-  </mat-card-content>
-  <ng-template #elseBlock2
-    ><mat-card-content>
-      <p>{{ doc?.content }}</p>
-    </mat-card-content></ng-template
-  >
-</mat-card>
+  </mat-card>
+</a>
