@@ -52,3 +52,14 @@ mat-icon:hover,
 mat-icon:visited {
   color: rgb(213, 58, 58);
 }
+
+a.nostyle:link {
+  text-decoration: inherit;
+  color: inherit;
+  cursor: auto;
+}
+a.nostyle:visited {
+  text-decoration: inherit;
+  color: inherit;
+  cursor: auto;
+}

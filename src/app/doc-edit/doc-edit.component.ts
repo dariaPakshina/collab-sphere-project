@@ -1,20 +1,37 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { NavDocEditComponent } from './nav-doc-edit/nav-doc-edit.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  NgForm,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ApiService } from '../api.service';
 import { Doc } from '../doc.model';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterOutlet } from '@angular/router';
+import { DocsService } from '../docs/docs.service';
+import { Subscription } from 'rxjs';
+import { JsonPipe, NgIf } from '@angular/common';
+import { ChangeDetectorRef } from '@angular/core';
+
 @Component({
   selector: 'app-doc-edit',
   standalone: true,
   imports: [
     NavDocEditComponent,
     MatFormFieldModule,
+    JsonPipe,
     MatInputModule,
+    NgIf,
     ReactiveFormsModule,
     MatButtonModule,
     RouterOutlet,
@@ -22,19 +39,73 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './doc-edit.component.html',
   styleUrls: ['./doc-edit.component.scss', './media-queries.scss'],
 })
-export class DocEditComponent implements OnInit {
-  addForm!: FormGroup;
+export class DocEditComponent implements OnInit, OnDestroy {
+  addForm: FormGroup = new FormGroup({});
+  id!: number;
+  editMode = false;
+  docs?: Doc[];
+  subscription!: Subscription;
+
+  constructor(
+    private apiService: ApiService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private docsService: DocsService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.addForm = new FormGroup({
-      title: new FormControl(null),
-      content: new FormControl(null),
+    this.route.params.subscribe((params: Params) => {
+      this.id = +params['id'];
+      this.editMode = params['id'] != null;
     });
+
+    this.loadDocs().then(() => {
+      this.docs = this.docsService.getDocs();
+      this.initForm();
+    });
+
+    this.subscription = this.docsService.docsChanged.subscribe(
+      (docs: Doc[]) => {
+        this.docs = docs;
+      }
+    );
   }
 
-  // onSubmit() {
-  //   console.log(this.addForm.value);
-  // }
+  private async loadDocs() {
+    try {
+      await this.apiService.fetchDocs();
+    } catch (error) {
+      console.error('Error loading docs:', error);
+    }
+  }
+
+  initForm() {
+    let docTitle = '';
+    let docContent = '';
+
+    if (this.editMode) {
+      const doc = this.docsService.getDoc(this.id);
+      this.docsService.editMode = true;
+
+      if (doc) {
+        docTitle = doc.title;
+        docContent = doc.content;
+      } else {
+        console.error(`Document with ID ${this.id} not found.`);
+      }
+    }
+
+    this.addForm = new FormGroup({
+      title: new FormControl(docTitle),
+      content: new FormControl(docContent),
+    });
+    this.cdr.detectChanges();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 
   //--------------------------------
 
@@ -67,8 +138,6 @@ export class DocEditComponent implements OnInit {
 
   // ---------------------------------
 
-  constructor(private apiService: ApiService) {}
-
   @ViewChild('form') form!: HTMLFormElement;
 
   onBtnSave() {
@@ -80,4 +149,6 @@ export class DocEditComponent implements OnInit {
     this.apiService.postDoc(docData.title, editTime, docData.content);
     this.addForm.reset();
   }
+
+  //------------------------------------
 }

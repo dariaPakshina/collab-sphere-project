@@ -8,6 +8,11 @@ export const routes: Routes = [
     title: 'Edit | CollabSphere',
     component: DocEditComponent,
   },
+  {
+    path: 'doc-edit/:id',
+    title: 'Edit | CollabSphere',
+    component: DocEditComponent,
+  },
   { path: 'docs', title: 'Documents | CollabSphere', component: DocsComponent },
   { path: '', redirectTo: '/docs', pathMatch: 'full' },
 ];

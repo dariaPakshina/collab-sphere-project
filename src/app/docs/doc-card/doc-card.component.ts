@@ -6,6 +6,7 @@ import { Doc } from '../../doc.model';
 import { NgIf, SlicePipe } from '@angular/common';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ApiService } from '../../api.service';
 
 @Component({
   selector: 'app-doc-card',
@@ -26,6 +27,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 export class DocCardComponent {
   @Input() doc?: Doc;
   @Input() index!: number;
+
+  constructor(private apiService: ApiService) {}
 
   @ViewChild('iconClose') iconClose!: ElementRef;
 }

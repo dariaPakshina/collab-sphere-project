@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { Doc } from './doc.model';
 import { createClient } from '@supabase/supabase-js';
 import { DocsService } from './docs/docs.service';
+import { DocCardComponent } from './docs/doc-card/doc-card.component';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,7 @@ export class ApiService {
 
   async postDoc(title: string, edittime: string, content: string) {
     try {
-      const docData: Doc = {
+      const docData = {
         title: title,
         edittime: edittime,
         content: content,
@@ -42,7 +43,7 @@ export class ApiService {
     try {
       const { data, error } = await this.supabase
         .from('docs')
-        .select('title, edittime, content');
+        .select('id, title, edittime, content');
 
       if (error) {
         console.error('Error fetching document:', error.message);

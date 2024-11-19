@@ -1,11 +1,21 @@
 <app-nav-doc-edit (btnClick)="onBtnSave()"></app-nav-doc-edit>
 
-<form #form [formGroup]="addForm" (ngSubmit)="onSave(addForm.value)">
+<form
+  *ngIf="addForm"
+  #form
+  [formGroup]="addForm"
+  (ngSubmit)="onSave(addForm.value)"
+>
   <div class="formField">
     <div class="mat-form-field">
       <mat-form-field class="inputForm" appearance="outline">
         <mat-label>Title</mat-label>
-        <input type="text" matInput formControlName="title" />
+        <input
+          type="text"
+          matInput
+          formControlName="title"
+          [value]="addForm.get('title')?.value"
+        />
       </mat-form-field>
       <section>
         <div class="example-button-row">
@@ -65,10 +75,10 @@
     </div>
     <mat-form-field class="textarea" appearance="outline">
       <textarea
-        type="text"
         #textarea
         matInput
         formControlName="content"
+        [value]="addForm.get('content')?.value"
       ></textarea>
     </mat-form-field>
   </div>

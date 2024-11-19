@@ -7,14 +7,13 @@ import { ApiService } from '../api.service';
   providedIn: 'root',
 })
 export class DocsService {
-  // constructor(private apiService: ApiService) {}
-
   docsChanged = new Subject<Doc[]>();
+  editMode = false;
 
   private docs: Doc[] = [];
 
-  setDocs(docs: Doc[]) {
-    this.docs = docs;
+  setDocs(data: Doc[]) {
+    this.docs = data;
     this.docsChanged.next(this.docs.slice());
   }
 
@@ -24,7 +23,8 @@ export class DocsService {
   }
 
   getDoc(id: number) {
-    return this.docs[id];
+    const doc = this.docs.find((doc) => doc.id === id);
+    return doc || null;
   }
 
   addDoc(doc: Doc) {
