@@ -148,6 +148,7 @@ export class DocEditComponent implements OnInit, OnDestroy {
     const editTime = new Date().toString();
     this.apiService.postDoc(docData.title, editTime, docData.content);
     this.addForm.reset();
+    // this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   //------------------------------------

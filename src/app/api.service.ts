@@ -1,15 +1,27 @@
-import { Injectable, NgZone } from '@angular/core';
+import {
+  EventEmitter,
+  Injectable,
+  NgZone,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Doc } from './doc.model';
 import { createClient } from '@supabase/supabase-js';
 import { DocsService } from './docs/docs.service';
 import { DocCardComponent } from './docs/doc-card/doc-card.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
   supabase: any;
-  constructor(private ngZone: NgZone, private docsService: DocsService) {
+  constructor(
+    private ngZone: NgZone,
+    private docsService: DocsService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
     this.ngZone.runOutsideAngular(() => {
       this.supabase = createClient(
         'https://xbjxhogwjbyxwfvvfuit.supabase.co',
@@ -52,6 +64,24 @@ export class ApiService {
       if (data) {
         this.docsService.setDocs(data);
       }
+    } catch (error) {
+      console.error('Unexpected error in fetchDocs:', error);
+    }
+  }
+
+  //--------------
+
+  index!: number;
+
+  getID(id: number) {
+    this.index = id;
+  }
+
+  async deleteDoc() {
+    try {
+      this.docsService.deleteDoc(this.index);
+      const {} = await this.supabase.from('docs').delete().eq('id', this.index);
+      window.location.reload();
     } catch (error) {
       console.error('Unexpected error in fetchDocs:', error);
     }

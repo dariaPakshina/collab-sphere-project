@@ -63,3 +63,9 @@ a.nostyle:visited {
   color: inherit;
   cursor: auto;
 }
+
+app-delete-window {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+}

@@ -2,16 +2,22 @@
   [routerLink]="['/doc-edit', doc?.id]"
   class="doc-card"
   appearance="outlined"
+  [id]="doc?.id"
 >
   <mat-card-header>
     <mat-card-title *ngIf="doc!.title.length > 20; else elseBlock1"
-      >{{ doc!.title | slice : 0 : 20 }}...<mat-icon #iconClose
+      >{{ doc!.title | slice : 0 : 20 }}...<mat-icon
+        #iconClose
+        (click)="onSendID($event)"
         >close</mat-icon
       ></mat-card-title
     >
     <ng-template #elseBlock1
       ><mat-card-title
-        >{{ doc!.title }}<mat-icon #iconClose>close</mat-icon></mat-card-title
+        >{{ doc!.title
+        }}<mat-icon #iconClose (click)="onSendID($event)"
+          >close</mat-icon
+        ></mat-card-title
       ></ng-template
     >
     <mat-card-subtitle>{{ doc?.edittime | slice : 4 : 15 }}</mat-card-subtitle>
@@ -25,3 +31,5 @@
     </mat-card-content></ng-template
   >
 </mat-card>
+
+<app-delete-window></app-delete-window>
