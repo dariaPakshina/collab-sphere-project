@@ -86,4 +86,27 @@ export class ApiService {
       console.error('Unexpected error in fetchDocs:', error);
     }
   }
+
+  //---------------
+
+  async updateDoc(title: string, edittime: string, content: string) {
+    try {
+      let newDoc: Doc = {
+        id: this.index,
+        title: title,
+        edittime: edittime,
+        content: content,
+      };
+      console.log('Doc to be updated:', newDoc);
+
+      this.docsService.updateDoc(this.index, newDoc);
+      const { error } = await this.supabase
+        .from('docs')
+        .update(newDoc)
+        .eq('id', this.index);
+      console.log('Updated');
+    } catch (error) {
+      console.error('Unexpected error in updateDoc:', error);
+    }
+  }
 }

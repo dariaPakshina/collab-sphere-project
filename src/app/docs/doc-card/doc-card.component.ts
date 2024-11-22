@@ -53,7 +53,7 @@ export class DocCardComponent implements AfterViewInit {
     private router: Router
   ) {}
 
-  @ViewChild('iconClose') iconClose!: ElementRef;
+  @ViewChild('iconClose') iconClose!: HTMLElement;
   @ViewChild(DeleteWindowComponent)
   deleteWindowComponent!: DeleteWindowComponent;
 
@@ -61,15 +61,28 @@ export class DocCardComponent implements AfterViewInit {
     console.log(this.deleteWindowComponent);
   }
 
-  onSendID(event: MouseEvent) {
-    event.stopPropagation();
+  onSendIDCard(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const docCardEl = target.closest('mat-card');
 
-    this.deleteWindowComponent.openDialog('0ms', '0ms');
-
-    const docCardEl = (event.target as HTMLElement).closest('mat-card');
     if (docCardEl) {
       const docCardId = docCardEl.id;
       this.apiService.getID(+docCardId);
+    } else {
+      console.log('No mat-card element found');
+    }
+  }
+
+  onSendIDIcon(event: MouseEvent) {
+    event.stopPropagation(); // Stop event from propagating to parent handlers
+
+    this.deleteWindowComponent.openDialog('0ms', '0ms');
+
+    const target = event.target as HTMLElement;
+    const docCardEl = target.closest('mat-card');
+    if (docCardEl) {
+      const docCardId = docCardEl.id;
+      this.apiService.getID(+docCardId); // Handle delete action
     } else {
       console.log('No mat-card element found');
     }

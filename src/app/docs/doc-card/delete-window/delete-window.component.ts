@@ -20,7 +20,7 @@ import { ApiService } from '../../../api.service';
     MatDialogContent,
     MatDialogTitle,
   ],
-  templateUrl: './delete-window.component.html',
+  template: '',
   styleUrl: './delete-window.component.scss',
 })
 export class DeleteWindowComponent {

@@ -1,0 +1,91 @@
+<mat-toolbar>
+  <img
+    src="https://img.icons8.com/?size=100&id=44053&format=png&color=000000"
+    alt=""
+  />
+  <span class="name">CollabSphere</span>
+
+  <div class="light-btns">
+    <button class="light-btn" mat-button [matMenuTriggerFor]="menu">
+      <mat-icon>sort</mat-icon>Sort By
+    </button>
+    <mat-menu #menu="matMenu">
+      <button
+        *ngIf="this.sortService.sortValues.sortLatest === false"
+        mat-menu-item
+        (click)="onLatest()"
+      >
+        Latest
+      </button>
+      <button
+        *ngIf="this.sortService.sortValues.sortLatest === true"
+        disabled
+        mat-menu-item
+        (click)="onLatest()"
+      >
+        Latest
+      </button>
+      <button
+        *ngIf="this.sortService.sortValues.sortOldest === false"
+        mat-menu-item
+        (click)="onOldest()"
+      >
+        Oldest
+      </button>
+      <button
+        *ngIf="this.sortService.sortValues.sortOldest === true"
+        disabled
+        mat-menu-item
+        (click)="onOldest()"
+      >
+        Oldest
+      </button>
+      <button
+        *ngIf="this.sortService.sortValues.sortTitle === false"
+        mat-menu-item
+        (click)="onTitle()"
+      >
+        Title
+      </button>
+      <button
+        *ngIf="this.sortService.sortValues.sortTitle === true"
+        disabled
+        mat-menu-item
+        (click)="onTitle()"
+      >
+        Title
+      </button>
+    </mat-menu>
+
+    <button class="light-btn" mat-button (click)="onSelect()">
+      <mat-icon>delete_outline</mat-icon>Select
+    </button>
+  </div>
+
+  <span class="example-spacer"></span>
+  <button
+    class="btn-new"
+    mat-flat-button
+    type="button"
+    routerLink="../doc-edit"
+  >
+    New
+  </button>
+
+  <button mat-button>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="logout-icon"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15"
+      />
+    </svg>
+  </button>
+</mat-toolbar>

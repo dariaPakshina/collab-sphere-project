@@ -1,6 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { NgFor } from '@angular/common';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { Doc } from '../doc.model';
 import { Subscription } from 'rxjs';
 import { DocsService } from './docs.service';
@@ -9,12 +8,15 @@ import { MatButton } from '@angular/material/button';
 import { ApiService } from '../api.service';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { NavDocsComponent } from './nav-docs/nav-docs.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SortPipe } from './sort.pipe';
+import { SortService } from './sort.service';
 
 @Component({
   selector: 'app-docs',
   standalone: true,
   imports: [
-    MatToolbarModule,
     NgFor,
     DocCardComponent,
     MatButton,
@@ -22,6 +24,10 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
     RouterLink,
     RouterLinkActive,
     MatGridListModule,
+    NavDocsComponent,
+    MatProgressSpinnerModule,
+    NgIf,
+    SortPipe,
   ],
   templateUrl: './docs.component.html',
   styleUrls: ['./docs.component.scss', './media-queries.scss'],
@@ -29,13 +35,16 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 export class DocsComponent implements OnInit, OnDestroy {
   docs?: Doc[];
   subscription!: Subscription;
+  loading = false;
 
   constructor(
     private docsService: DocsService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    public sortService: SortService
   ) {}
 
   ngOnInit() {
+    this.loading = true;
     this.loadDocs();
 
     this.docs = this.docsService.getDocs();
@@ -53,7 +62,8 @@ export class DocsComponent implements OnInit, OnDestroy {
 
   private async loadDocs() {
     try {
-      await this.apiService.fetchDocs(); // Fetch docs and populate service
+      await this.apiService.fetchDocs();
+      this.loading = false;
     } catch (error) {
       console.error('Error loading docs:', error);
     }

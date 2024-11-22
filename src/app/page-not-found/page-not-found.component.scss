@@ -1,0 +1,21 @@
+h4 {
+  text-align: center;
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+}
+
+a,
+a:link,
+a:visited {
+  cursor: pointer;
+  display: flex;
+  color: #343dff;
+  font-size: 1.2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+a:hover,
+a:active {
+  color: #6b72ff;
+}

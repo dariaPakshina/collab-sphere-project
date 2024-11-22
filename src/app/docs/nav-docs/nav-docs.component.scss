@@ -1,0 +1,45 @@
+@use "@angular/material" as mat;
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar {
+  margin-bottom: 2rem;
+  background-color: #dbe4ff;
+  font-weight: 400;
+  font-family: "Quicksand", sans-serif;
+}
+
+img {
+  height: 2rem;
+  width: 2rem;
+}
+
+.logout-icon {
+  height: 1.5rem;
+  width: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  stroke-width: 1.5px;
+
+  // отразить по горизонтали
+  -moz-transform: scale(-1, -1);
+  -o-transform: scale(-1, -1);
+  -webkit-transform: scale(-1, -1);
+  transform: scale(-1, -1);
+}
+
+.btn-new {
+  margin-right: 1.5rem;
+}
+
+.light-btn {
+  background-color: #eef2ff;
+  margin-right: 1rem;
+}
+
+.light-btns {
+  margin-left: 4rem;
+}
