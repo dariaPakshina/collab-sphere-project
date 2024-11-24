@@ -72,9 +72,15 @@ export class ApiService {
   //--------------
 
   index!: number;
+  indices: number[] = [];
 
   getID(id: number) {
     this.index = id;
+  }
+
+  getIDs(ids: number) {
+    this.indices.push(ids);
+    this.deleteDocs();
   }
 
   async deleteDoc() {
@@ -82,6 +88,22 @@ export class ApiService {
       this.docsService.deleteDoc(this.index);
       const {} = await this.supabase.from('docs').delete().eq('id', this.index);
       window.location.reload();
+    } catch (error) {
+      console.error('Unexpected error in fetchDocs:', error);
+    }
+  }
+
+  async deleteDocs() {
+    try {
+      console.log(this.indices);
+      if (this.indices.length > 0) {
+        this.docsService.deleteDocs(this.indices);
+        const {} = await this.supabase
+          .from('docs')
+          .delete()
+          .in('id', this.indices);
+        window.location.reload();
+      }
     } catch (error) {
       console.error('Unexpected error in fetchDocs:', error);
     }

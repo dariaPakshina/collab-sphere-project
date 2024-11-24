@@ -10,7 +10,12 @@ import { NavDocEditComponent } from './nav-doc-edit/nav-doc-edit.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  NgModel,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ApiService } from '../api.service';
 import { Doc } from '../doc.model';
 import { ActivatedRoute, Params, Router, RouterOutlet } from '@angular/router';
@@ -55,6 +60,13 @@ export class DocEditComponent implements OnInit, OnDestroy {
 
   loading = true;
 
+  @ViewChild('textarea', { static: false })
+  textarea?: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('ctrlZBtn', { static: false })
+  ctrlZBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild('ctrlYBtn', { static: false })
+  ctrlYBtn?: ElementRef<HTMLButtonElement>;
+
   ngOnInit() {
     this.addForm = new FormGroup({
       title: new FormControl(null),
@@ -90,7 +102,6 @@ export class DocEditComponent implements OnInit, OnDestroy {
   initForm() {
     let docTitle = '';
     let docContent = '';
-
     if (this.editMode && this.id) {
       const doc = this.docsService.getDoc(this.id);
       this.docsService.editMode = true;
@@ -104,11 +115,6 @@ export class DocEditComponent implements OnInit, OnDestroy {
       }
     }
 
-    console.log('Initializing form with:', {
-      title: docTitle,
-      content: docContent,
-    });
-
     this.addForm.patchValue({
       title: docTitle,
       content: docContent,
@@ -120,9 +126,6 @@ export class DocEditComponent implements OnInit, OnDestroy {
   }
 
   //--------------------------------
-
-  @ViewChild('textarea', { static: false })
-  textarea?: ElementRef<HTMLTextAreaElement>;
 
   onBold() {
     if (this.textarea) {

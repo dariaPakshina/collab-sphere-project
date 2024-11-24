@@ -6,21 +6,37 @@
   (click)="onSendIDCard($event)"
 >
   <mat-card-header>
-    <mat-card-title *ngIf="doc!.title.length > 20; else elseBlock1"
-      >{{ doc!.title | slice : 0 : 20 }}...<mat-icon
-        #iconClose
+    <mat-card-title *ngIf="doc!.title.length > 20; else changeTitleLength"
+      >{{ doc!.title | slice : 0 : 20 }}...
+
+      <mat-icon
+        class="mat-icon-close"
         (click)="onSendIDIcon($event)"
+        #iconClose
+        *ngIf="this.docsService.selectMode === false; else checkBox"
         >close</mat-icon
-      ></mat-card-title
-    >
-    <ng-template #elseBlock1
+      >
+      <ng-template #checkBox
+        ><mat-checkbox (click)="onSendIDCheckbox($event)"></mat-checkbox
+      ></ng-template>
+    </mat-card-title>
+
+    <ng-template #changeTitleLength
       ><mat-card-title
-        >{{ doc!.title
-        }}<mat-icon #iconClose (click)="onSendIDIcon($event)"
+        >{{ doc!.title }}
+
+        <mat-icon
+          *ngIf="this.docsService.selectMode === false; else checkBox"
+          (click)="onSendIDIcon($event)"
+          class="mat-icon-close"
+          #iconClose
           >close</mat-icon
-        ></mat-card-title
-      ></ng-template
-    >
+        >
+        <ng-template #checkBox
+          ><mat-checkbox (click)="onSendIDCheckbox($event)"></mat-checkbox
+        ></ng-template> </mat-card-title
+    ></ng-template>
+
     <mat-card-subtitle>{{ doc?.edittime | slice : 4 : 15 }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content *ngIf="doc!.content.length > 45; else elseBlock2">

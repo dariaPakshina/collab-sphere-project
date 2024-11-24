@@ -35,22 +35,23 @@ mat-card-subtitle {
   color: rgb(128, 123, 173) !important;
 }
 
-mat-icon {
-  opacity: 0;
-}
-
-mat-icon {
+.mat-icon-close {
   opacity: 0;
   transition: all 0.1s;
 }
 
-.doc-card:hover mat-icon {
+.doc-card:hover .mat-icon-close {
   opacity: 100%;
 }
 
-mat-icon:hover,
-mat-icon:visited {
+.mat-icon-close:hover,
+.mat-icon-close:visited {
   color: rgb(213, 58, 58);
+}
+
+mat-checkbox {
+  height: 1.7rem;
+  width: 1.7rem;
 }
 
 a.nostyle:link {

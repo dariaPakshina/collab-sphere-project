@@ -60,6 +60,15 @@
     <button class="light-btn" mat-button (click)="onSelect()">
       <mat-icon>delete_outline</mat-icon>Select
     </button>
+
+    <button
+      class="red-btn"
+      mat-button
+      *ngIf="this.docsService.selectMode === true"
+      (click)="onDeleteClick()"
+    >
+      Delete
+    </button>
   </div>
 
   <span class="example-spacer"></span>

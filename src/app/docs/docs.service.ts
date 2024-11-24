@@ -41,4 +41,21 @@ export class DocsService {
     this.docs.splice(id, 1);
     this.docsChanged.next(this.docs.slice());
   }
+
+  selectMode = false;
+
+  deleteAction = new Subject<void>();
+
+  deleteAction$ = this.deleteAction.asObservable();
+
+  triggerDelete() {
+    this.deleteAction.next();
+  }
+
+  deleteDocs(ids: number[]) {
+    if (this.selectMode === true) {
+      this.docs.splice(ids[0], ids.length);
+      this.docsChanged.next(this.docs.slice());
+    }
+  }
 }
