@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
@@ -43,7 +44,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   templateUrl: './doc-edit.component.html',
   styleUrls: ['./doc-edit.component.scss', './media-queries.scss'],
 })
-export class DocEditComponent implements OnInit, OnDestroy {
+export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   addForm: FormGroup = new FormGroup({});
   id!: number;
   editMode = false;
@@ -63,9 +64,9 @@ export class DocEditComponent implements OnInit, OnDestroy {
   @ViewChild('textarea', { static: false })
   textarea?: ElementRef<HTMLTextAreaElement>;
   @ViewChild('ctrlZBtn', { static: false })
-  ctrlZBtn?: ElementRef<HTMLButtonElement>;
+  ctrlZBtn?: HTMLButtonElement;
   @ViewChild('ctrlYBtn', { static: false })
-  ctrlYBtn?: ElementRef<HTMLButtonElement>;
+  ctrlYBtn?: HTMLButtonElement;
 
   ngOnInit() {
     this.addForm = new FormGroup({
@@ -107,7 +108,6 @@ export class DocEditComponent implements OnInit, OnDestroy {
       this.docsService.editMode = true;
 
       if (doc) {
-        console.log(`Editing document with ID ${this.id}:`, doc);
         docTitle = doc.title;
         docContent = doc.content;
       } else {
@@ -121,13 +121,39 @@ export class DocEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  updateButtonStates() {
+    if (!this.textarea?.nativeElement.classList.contains('ng-dirty')) {
+      if (this.ctrlZBtn) {
+        console.log(this.textarea?.nativeElement.classList);
+        this.ctrlZBtn.disabled = true;
+      }
+      if (this.ctrlYBtn) {
+        this.ctrlYBtn.disabled = true;
+      }
+    }
+    if (this.textarea?.nativeElement.classList.contains('ng-dirty')) {
+      if (this.ctrlZBtn) {
+        this.ctrlZBtn.disabled = false;
+      }
+      if (this.ctrlYBtn) {
+        this.ctrlYBtn.disabled = false;
+      }
+    }
+    this.cdr.detectChanges();
+  }
+
+  ngAfterViewInit() {}
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
   //--------------------------------
 
-  onBold() {
+  onBold(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
     if (this.textarea) {
       const start = this.textarea.nativeElement.selectionStart;
       const end = this.textarea.nativeElement.selectionEnd;
@@ -143,12 +169,22 @@ export class DocEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCtrlZ() {
-    document.execCommand('undo');
+  onCtrlZ(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.textarea) {
+      this.textarea.nativeElement.focus();
+      document.execCommand('undo');
+    }
   }
 
-  onCtrlY() {
-    document.execCommand('redo');
+  onCtrlY(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.textarea) {
+      this.textarea.nativeElement.focus();
+      document.execCommand('redo');
+    }
   }
 
   // ---------------------------------

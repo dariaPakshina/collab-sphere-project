@@ -23,7 +23,7 @@
             mat-stroked-button
             style="font-weight: 1000"
             title="Bold"
-            (click)="onBold()"
+            (click)="onBold($event)"
           >
             b
           </button>
@@ -31,8 +31,8 @@
             #ctrlZBtn
             mat-stroked-button
             role="button"
-            title="CtrlZ"
-            (click)="onCtrlZ()"
+            title="Undo"
+            (click)="onCtrlZ($event)"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -53,8 +53,8 @@
             #ctrlYBtn
             role="button"
             mat-stroked-button
-            title="CtrlY"
-            (click)="onCtrlY()"
+            title="Redo"
+            (click)="onCtrlY($event)"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +75,13 @@
       </section>
     </div>
     <mat-form-field class="textarea" appearance="outline">
-      <textarea #textarea matInput formControlName="content"></textarea>
+      <textarea
+        #textarea
+        matInput
+        formControlName="content"
+        (click)="updateButtonStates()"
+        (input)="updateButtonStates()"
+      ></textarea>
     </mat-form-field>
   </div>
 </form>
