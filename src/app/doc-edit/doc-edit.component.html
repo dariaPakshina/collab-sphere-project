@@ -14,7 +14,7 @@
     <div class="mat-form-field">
       <mat-form-field class="inputForm" appearance="outline">
         <mat-label>Title</mat-label>
-        <input type="text" matInput formControlName="title" />
+        <input #input type="text" matInput formControlName="title" />
       </mat-form-field>
       <section>
         <div class="example-button-row">
@@ -85,3 +85,7 @@
     </mat-form-field>
   </div>
 </form>
+
+<!-- <app-navigate
+  (btnClickSave)="onBtnSave()"
+></app-navigate> -->

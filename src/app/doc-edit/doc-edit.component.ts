@@ -19,13 +19,24 @@ import {
 } from '@angular/forms';
 import { ApiService } from '../api.service';
 import { Doc } from '../doc.model';
-import { ActivatedRoute, Params, Router, RouterOutlet } from '@angular/router';
+import {
+  ActivatedRoute,
+  Event,
+  NavigationStart,
+  Params,
+  Router,
+  RouterOutlet,
+} from '@angular/router';
 import { DocsService } from '../docs/docs.service';
 import { Subscription } from 'rxjs';
 import { JsonPipe, NgIf } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
 import { DocCardComponent } from '../docs/doc-card/doc-card.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {
+  DialogAnimationsExampleDialog,
+  NavigateComponent,
+} from './navigate/navigate.component';
 
 @Component({
   selector: 'app-doc-edit',
@@ -40,6 +51,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatButtonModule,
     RouterOutlet,
     MatProgressSpinnerModule,
+    NavigateComponent,
   ],
   templateUrl: './doc-edit.component.html',
   styleUrls: ['./doc-edit.component.scss', './media-queries.scss'],
@@ -50,6 +62,8 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   editMode = false;
   docs?: Doc[];
   subscription!: Subscription;
+  saved = false;
+  loading = true;
 
   constructor(
     private apiService: ApiService,
@@ -58,8 +72,6 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     private docsService: DocsService,
     private cdr: ChangeDetectorRef
   ) {}
-
-  loading = true;
 
   @ViewChild('textarea', { static: false })
   textarea?: ElementRef<HTMLTextAreaElement>;
@@ -144,6 +156,13 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {}
 
+  canDeactivate(): boolean {
+    if (this.saved === false) {
+      return confirm('You have unsaved changes. Do you really want to leave?');
+    }
+    return true;
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
@@ -212,6 +231,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   onSave(id: number | null, docData: Doc) {
     const editTime = new Date().toString();
     this.loading = true;
+    this.saved = true;
 
     if (id) {
       this.apiService

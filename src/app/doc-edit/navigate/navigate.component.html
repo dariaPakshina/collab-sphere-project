@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Delete</h2>
+<mat-dialog-content> Would you like to save changes? </mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close (click)="onClick()">Cancel</button>
+  <button
+    mat-button
+    mat-dialog-close
+    cdkFocusInitial
+    style="color: #343dff"
+    (click)="onSaveBtn()"
+  >
+    Save
+  </button>
+</mat-dialog-actions>
