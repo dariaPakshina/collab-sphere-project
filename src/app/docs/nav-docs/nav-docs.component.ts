@@ -47,6 +47,10 @@ export class NavDocsComponent {
     this.docsService.selectMode = true;
   }
 
+  onCancel() {
+    this.docsService.selectMode = false;
+  }
+
   onDeleteClick() {
     this.docsService.triggerDelete();
   }

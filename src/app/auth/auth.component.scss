@@ -1,0 +1,42 @@
+mat-toolbar {
+  background-color: rgb(238, 241, 255);
+  font-weight: 400;
+  font-family: "Quicksand", sans-serif;
+}
+
+img {
+  height: 2rem;
+  width: 2rem;
+  cursor: pointer;
+}
+.name {
+  cursor: pointer;
+}
+
+.container {
+  margin-top: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3rem;
+}
+
+mat-form-field {
+  width: 20rem;
+}
+
+p {
+  cursor: pointer;
+  margin-top: 2rem;
+  color: #343dff;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,48 @@
+<mat-toolbar>
+  <img
+    src="https://img.icons8.com/?size=100&id=44053&format=png&color=000000"
+    routerLink="/"
+  />
+  <span class="name" routerLink="/">CollabSphere</span>
+</mat-toolbar>
+
+<div class="container">
+  <form>
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput required type="email" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        [type]="hide() ? 'password' : 'text'"
+        required
+        type="password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hidePassword($event)"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide()"
+      >
+        <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+      <mat-hint
+        >Lowercase and uppercase letters, digits and symbols required</mat-hint
+      >
+    </mat-form-field>
+  </form>
+
+  <section>
+    <div>
+      <button mat-flat-button>Sign up</button>
+    </div>
+  </section>
+
+  <p>
+    Already have an account? Sign in<mat-icon>keyboard_arrow_right</mat-icon>
+  </p>
+</div>

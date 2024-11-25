@@ -1,0 +1,68 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar {
+  background-color: rgb(238, 241, 255);
+  font-weight: 400;
+  font-family: "Quicksand", sans-serif;
+}
+
+img {
+  height: 2rem;
+  width: 2rem;
+}
+
+.btn-signup {
+  margin-left: 1rem;
+}
+
+.btn-signin {
+  background-color: rgba(219, 228, 255, 1);
+}
+
+.hero {
+  height: 75vh;
+  background: rgb(255, 218, 245);
+  background: radial-gradient(
+    circle,
+    rgba(255, 218, 245, 1) 0%,
+    rgba(219, 228, 255, 1) 93%
+  );
+  display: flex;
+  flex-direction: column;
+  padding-top: 8rem;
+  align-items: center;
+}
+
+h1,
+h6 {
+  color: rgb(112, 55, 225);
+  font-weight: 600;
+  text-align: center;
+}
+
+h6 {
+  opacity: 70%;
+  margin-top: 2rem;
+}
+
+.btn-start {
+  margin-top: 3rem;
+  font-size: 1.3rem;
+  padding: 2rem;
+}
+
+.icons {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-top: 10rem;
+}
+
+.icon {
+  cursor: pointer;
+  height: 2rem;
+  width: 2rem;
+  fill: rgba(68, 89, 252, 0.448);
+}

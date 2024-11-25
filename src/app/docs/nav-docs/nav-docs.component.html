@@ -57,9 +57,13 @@
       </button>
     </mat-menu>
 
-    <button class="light-btn" mat-button (click)="onSelect()">
+    <button *ngIf="this.docsService.selectMode === false; else cancelSelect" class="light-btn" mat-button (click)="onSelect()">
       <mat-icon>delete_outline</mat-icon>Select
     </button>
+
+    <ng-template #cancelSelect ><button  class="light-btn" mat-button (click)="onCancel()">
+      <mat-icon>close</mat-icon>Cancel
+    </button></ng-template>
 
     <button
       class="red-btn"
