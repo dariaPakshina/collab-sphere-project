@@ -7,20 +7,48 @@
 </mat-toolbar>
 
 <div class="container">
-  <form>
+  <form [formGroup]="addForm" (ngSubmit)="onSignUp(addForm.value)">
+    <mat-form-field appearance="outline">
+      <mat-label>Your name</mat-label>
+      <input
+        #inputName
+        matInput
+        required
+        type="text"
+        formControlName="name"
+        (blur)="updateErrorMessageName()"
+      />
+      <mat-error *ngIf="errorMessageName">
+        {{ errorMessageName() }}
+      </mat-error>
+    </mat-form-field>
+
     <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
-      <input matInput required type="email" />
+      <input
+        #inputEmail
+        matInput
+        required
+        type="email"
+        formControlName="email"
+        (blur)="updateErrorMessageEmail()"
+      />
+      <mat-error *ngIf="errorMessageEmail">{{ errorMessageEmail() }}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Password</mat-label>
       <input
+        #inputPassword
         matInput
         [type]="hide() ? 'password' : 'text'"
         required
-        type="password"
+        formControlName="password"
+        (blur)="updateErrorMessagePassword()"
       />
+      <mat-error *ngIf="errorMessagePassword">
+        {{ errorMessagePassword() }}
+      </mat-error>
       <button
         mat-icon-button
         matSuffix
@@ -30,17 +58,11 @@
       >
         <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
       </button>
-      <mat-hint
-        >Lowercase and uppercase letters, digits and symbols required</mat-hint
-      >
+      <mat-hint>Minimum 8 characters</mat-hint>
     </mat-form-field>
-  </form>
 
-  <section>
-    <div>
-      <button mat-flat-button>Sign up</button>
-    </div>
-  </section>
+    <button mat-flat-button type="submit">Sign up</button>
+  </form>
 
   <p>
     Already have an account? Sign in<mat-icon>keyboard_arrow_right</mat-icon>

@@ -29,14 +29,22 @@ form {
 
 mat-form-field {
   width: 20rem;
+  margin-bottom: 1rem;
 }
 
 p {
   cursor: pointer;
-  margin-top: 2rem;
+  margin-top: 1rem;
   color: #343dff;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+
+button {
+  margin-top: 1rem;
+  max-width: 7rem;
+  justify-self: center;
+  align-self: center;
 }
