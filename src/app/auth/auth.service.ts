@@ -14,10 +14,11 @@ export class AuthService {
   apiService = inject(ApiService);
   supabase = this.apiService.supabase;
   user = new BehaviorSubject<AuthResponseData | null>(null);
+  singingIn = false;
 
   inputEmail: string = '';
   inputPassword: string = '';
-  inputName: string = '';
+  inputName!: string | null;
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
@@ -45,15 +46,37 @@ export class AuthService {
     this.router.navigate(['../docs'], { relativeTo: this.route });
   }
 
+  async signIn() {
+    const { data, error } = await this.supabase.auth.signInWithPassword({
+      email: this.inputEmail,
+      password: this.inputPassword,
+    });
+    if (error) {
+      console.error('Error signing in:', error.message);
+      return;
+    }
+    console.log('User signed in successfully:', data);
+    this.handleAuth(data.data, data.session);
+    this.router.navigate(['../docs'], { relativeTo: this.route });
+  }
+
+  async logOut() {
+    const { error } = await this.supabase.auth.signOut();
+    if (error) {
+      console.error('Error logging out:', error.message);
+      return;
+    }
+    this.router.navigate([''], { relativeTo: this.route });
+  }
+
   authStateChanges() {
     const { data } = this.supabase.auth.onAuthStateChange(
       (event: any, session: any) => {
-        console.log(event, session);
-
+        console.log(event, session, '(authStateChanges)');
         if (event === 'INITIAL_SESSION') {
-          console.log('Initial session');
+          console.log('Initial session (authStateChanges)');
         } else if (event === 'SIGNED_IN') {
-          // handle sign in event
+          console.log('Signed in (authStateChanges)');
         } else if (event === 'SIGNED_OUT') {
           // handle sign out event
           // } else if (event === 'PASSWORD_RECOVERY') {

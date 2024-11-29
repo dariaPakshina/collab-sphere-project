@@ -32,7 +32,9 @@ mat-form-field {
   margin-bottom: 1rem;
 }
 
-p {
+.switchText {
+  background-color: transparent;
+  border: none;
   cursor: pointer;
   margin-top: 1rem;
   color: #343dff;
@@ -42,7 +44,7 @@ p {
   align-items: center;
 }
 
-button {
+.signUpBtn {
   margin-top: 1rem;
   max-width: 7rem;
   justify-self: center;

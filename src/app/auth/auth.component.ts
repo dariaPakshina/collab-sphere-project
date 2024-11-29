@@ -69,12 +69,41 @@ export class AuthComponent implements OnInit {
     });
   }
 
-  onSignUp(formData: User) {
+  toggleSignIn() {
+    this.authService.singingIn = true;
+    this.addForm.removeControl('name');
+  }
+
+  toggleSignUp() {
+    this.authService.singingIn = false;
+    this.addForm.addControl('name', this.name);
+  }
+
+  onSignUpIn(formData: User) {
+    if (!this.addForm.valid) {
+      return;
+    }
+
     this.addForm.valueChanges.subscribe();
-    this.authService.inputName = formData.name;
+    this.authService.inputName = !this.authService.singingIn
+      ? formData.name
+      : null;
     this.authService.inputEmail = formData.email;
     this.authService.inputPassword = formData.password;
-    this.authService.signUp();
+
+    console.log(
+      'signing user: ',
+      formData.name,
+      formData.email,
+      formData.password,
+      this.authService.singingIn
+    );
+
+    if (this.authService.singingIn === false) {
+      this.authService.signUp();
+    } else {
+      this.authService.signIn();
+    }
   }
 
   updateErrorMessageEmail() {

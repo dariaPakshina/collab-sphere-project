@@ -7,8 +7,8 @@
 </mat-toolbar>
 
 <div class="container">
-  <form [formGroup]="addForm" (ngSubmit)="onSignUp(addForm.value)">
-    <mat-form-field appearance="outline">
+  <form [formGroup]="addForm" (ngSubmit)="onSignUpIn(addForm.value)">
+    <mat-form-field appearance="outline" *ngIf="!this.authService.singingIn">
       <mat-label>Your name</mat-label>
       <input
         #inputName
@@ -55,16 +55,32 @@
         (click)="hidePassword($event)"
         [attr.aria-label]="'Hide password'"
         [attr.aria-pressed]="hide()"
+        type="button"
       >
         <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
       </button>
-      <mat-hint>Minimum 8 characters</mat-hint>
+      <mat-hint *ngIf="!this.authService.singingIn"
+        >Minimum 8 characters</mat-hint
+      >
     </mat-form-field>
 
-    <button mat-flat-button type="submit">Sign up</button>
+    <button class="signUpBtn" mat-flat-button type="submit">
+      Sign {{ !this.authService.singingIn ? "Up" : "In" }}
+    </button>
   </form>
 
-  <p>
+  <button
+    *ngIf="!this.authService.singingIn; else signIn"
+    class="switchText"
+    type="button"
+    (click)="toggleSignIn()"
+  >
     Already have an account? Sign in<mat-icon>keyboard_arrow_right</mat-icon>
-  </p>
+  </button>
+
+  <ng-template #signIn>
+    <button class="switchText" type="button" (click)="toggleSignUp()">
+      Don't have an account? Sign up<mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+  </ng-template>
 </div>

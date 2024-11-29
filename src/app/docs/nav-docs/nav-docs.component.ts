@@ -9,6 +9,7 @@ import { NgIf } from '@angular/common';
 import { DocsService } from '../docs.service';
 import { ApiService } from '../../api.service';
 import { DocCardComponent } from '../doc-card/doc-card.component';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-nav-docs',
@@ -28,7 +29,8 @@ export class NavDocsComponent {
   constructor(
     public sortService: SortService,
     public docsService: DocsService,
-    public apiService: ApiService
+    public apiService: ApiService,
+    public authService: AuthService
   ) {}
 
   onLatest() {
@@ -53,5 +55,9 @@ export class NavDocsComponent {
 
   onDeleteClick() {
     this.docsService.triggerDelete();
+  }
+
+  onLogOut() {
+    this.authService.logOut();
   }
 }
