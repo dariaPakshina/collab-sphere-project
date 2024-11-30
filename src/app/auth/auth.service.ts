@@ -5,7 +5,13 @@ import { BehaviorSubject, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export class AuthResponseData {
-  constructor(data: object, session: object) {}
+  data: object;
+  session: object; // Adjust the type if you know the exact structure
+
+  constructor(data: object, session: object) {
+    this.data = data;
+    this.session = session;
+  }
 }
 
 @Injectable({

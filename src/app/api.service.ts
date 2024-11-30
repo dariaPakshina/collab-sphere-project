@@ -30,12 +30,38 @@ export class ApiService {
     });
   }
 
+  private userId: string | null = null;
+
+  async getUserId() {
+    try {
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+
+      if (user) {
+        this.userId = user.id;
+        return user.id;
+      }
+      return null;
+    } catch (error) {
+      console.error('Unexpected error in postDoc:', error);
+      return null;
+    }
+  }
+
   async postDoc(title: string, edittime: string, content: string) {
+    const userId = await this.getUserId();
+    if (!userId) {
+      console.error('No user ID available. Cannot fetch documents.');
+      return;
+    }
+
     try {
       const docData = {
         title: title,
         edittime: edittime,
         content: content,
+        user_id: userId,
       };
       const { data, error } = await this.supabase.from('docs').insert(docData);
       if (error) {
@@ -52,10 +78,16 @@ export class ApiService {
   //-------------
 
   async fetchDocs() {
+    const userId = await this.getUserId();
+    if (!userId) {
+      console.error('No user ID available. Cannot fetch documents.');
+      return;
+    }
     try {
       const { data, error } = await this.supabase
         .from('docs')
-        .select('id, title, edittime, content');
+        .select('id, title, edittime, content')
+        .eq('user_id', userId);
 
       if (error) {
         console.error('Error fetching document:', error.message);
