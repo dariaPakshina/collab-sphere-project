@@ -8,6 +8,6 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [MatButtonModule, MatToolbarModule, RouterLink],
   templateUrl: './starter-page.component.html',
-  styleUrl: './starter-page.component.scss',
+  styleUrls: ['./starter-page.component.scss', './media-queries.scss'],
 })
 export class StarterPageComponent {}

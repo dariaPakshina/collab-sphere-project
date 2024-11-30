@@ -1,0 +1,76 @@
+@media (max-width: 800px) {
+  .hero {
+    height: calc(100vh - 64px - 5rem);
+    padding-top: 5rem;
+  }
+  h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 640px) {
+  h6 {
+    margin-top: 0;
+  }
+  .hero {
+    height: calc(100vh - 56px - 3rem);
+    padding-top: 3rem;
+  }
+  h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero {
+    height: calc(100vh - 56px - 5rem);
+    padding-top: 5rem;
+  }
+  h1 {
+    font-size: 2.5rem;
+    line-height: 3rem;
+  }
+  h6 {
+    font-size: 110%;
+  }
+}
+
+@media (max-width: 400px) {
+  .btn-signup {
+    margin-left: 0.5rem;
+  }
+
+  .name {
+    font-size: 80%;
+  }
+}
+
+@media (max-width: 360px) {
+  .name {
+    font-size: 70%;
+  }
+
+  button {
+    font-size: 60%;
+    padding: 0.1rem;
+  }
+
+  .btn-start {
+    font-size: 100%;
+    padding: 1.7rem;
+  }
+}
+
+@media (min-height: 800px) {
+  .hero {
+    height: calc(100vh - 56px - 12rem);
+    padding-top: 12rem;
+  }
+}
+
+@media (min-height: 595px) {
+  .hero {
+    height: calc(100vh - 56px - 5rem);
+    padding-top: 5rem;
+  }
+}

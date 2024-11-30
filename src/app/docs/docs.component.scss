@@ -1,11 +1,15 @@
 @use "@angular/material" as mat;
 
+.box {
+  margin: 4rem 5rem 0 5rem !important;
+}
+
 .container {
   margin: 4rem 5rem 0 5rem !important;
   display: grid;
   column-gap: 1.5rem;
   row-gap: 3rem;
-  grid-template-columns: 15rem 15rem 15rem 15rem 15rem;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   justify-content: center;
   align-items: center;
 }

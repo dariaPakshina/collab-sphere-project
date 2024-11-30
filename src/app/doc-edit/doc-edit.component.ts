@@ -247,7 +247,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
         .postDoc(docData.title, editTime, docData.content)
         .then(() => {
           this.apiService.fetchDocs().then(() => {
-            this.router.navigate(['../'], { relativeTo: this.route });
+            this.router.navigate(['../docs'], { relativeTo: this.route });
             this.loading = false;
           });
         });
