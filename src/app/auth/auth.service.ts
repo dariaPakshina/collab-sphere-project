@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from '../api.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export class AuthResponseData {
   constructor(data: object, session: object) {}
@@ -15,6 +16,9 @@ export class AuthService {
   supabase = this.apiService.supabase;
   user = new BehaviorSubject<AuthResponseData | null>(null);
   singingIn = false;
+  private loginExpirTimer: any;
+  errorMode = false;
+  errorMessage = '';
 
   inputEmail: string = '';
   inputPassword: string = '';
@@ -25,6 +29,22 @@ export class AuthService {
   handleAuth(data: object, session: object) {
     const user = new AuthResponseData(data, session);
     this.user.next(user);
+    this.autoLogOut();
+    localStorage.setItem('userData', JSON.stringify(user));
+  }
+
+  handleErrors(errorRes: any) {
+    this.errorMode = true;
+    console.log({ ...errorRes });
+    this.errorMessage = 'An unknown error occurred!';
+    if ((errorRes.status = 422)) {
+      this.errorMessage = 'User with this email already exists';
+    }
+    if ((errorRes.status = 400)) {
+      this.errorMessage = 'Wrong email or password';
+    }
+
+    return throwError(() => new Error(this.errorMessage));
   }
 
   async signUp() {
@@ -38,7 +58,7 @@ export class AuthService {
       },
     });
     if (error) {
-      console.error('Error signing up:', error.message);
+      this.handleErrors(error);
       return;
     }
     console.log('User signed up successfully:', data);
@@ -52,7 +72,7 @@ export class AuthService {
       password: this.inputPassword,
     });
     if (error) {
-      console.error('Error signing in:', error.message);
+      this.handleErrors(error);
       return;
     }
     console.log('User signed in successfully:', data);
@@ -67,6 +87,32 @@ export class AuthService {
       return;
     }
     this.router.navigate([''], { relativeTo: this.route });
+    localStorage.removeItem('userData');
+    if (this.loginExpirTimer) {
+      clearTimeout(this.loginExpirTimer);
+    }
+  }
+
+  autoLogIn() {
+    const userData: {
+      data: object;
+      session: object;
+    } = JSON.parse(localStorage.getItem('userData')!);
+    if (!userData) {
+      return;
+    }
+    const loadedUser = new AuthResponseData(userData.data, userData.session);
+
+    if (loadedUser) {
+      this.user.next(loadedUser);
+      this.autoLogOut();
+    }
+  }
+
+  autoLogOut() {
+    this.loginExpirTimer = setTimeout(() => {
+      this.logOut();
+    }, 172800000);
   }
 
   authStateChanges() {

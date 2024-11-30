@@ -13,8 +13,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { User } from './user.model';
-import { AuthService } from './auth.service';
-import { merge } from 'rxjs';
+import { AuthResponseData, AuthService } from './auth.service';
+import { merge, Observable } from 'rxjs';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -90,14 +90,6 @@ export class AuthComponent implements OnInit {
       : null;
     this.authService.inputEmail = formData.email;
     this.authService.inputPassword = formData.password;
-
-    console.log(
-      'signing user: ',
-      formData.name,
-      formData.email,
-      formData.password,
-      this.authService.singingIn
-    );
 
     if (this.authService.singingIn === false) {
       this.authService.signUp();

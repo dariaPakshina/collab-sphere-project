@@ -7,6 +7,12 @@
 </mat-toolbar>
 
 <div class="container">
+  <p
+    style="color: red; margin-bottom: 2rem"
+    *ngIf="this.authService.errorMode === true"
+  >
+    {{ this.authService.errorMessage }}
+  </p>
   <form [formGroup]="addForm" (ngSubmit)="onSignUpIn(addForm.value)">
     <mat-form-field appearance="outline" *ngIf="!this.authService.singingIn">
       <mat-label>Your name</mat-label>
