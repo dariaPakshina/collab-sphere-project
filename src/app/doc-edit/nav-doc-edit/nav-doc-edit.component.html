@@ -9,9 +9,11 @@
   <button mat-flat-button type="submit" (click)="onSaveBtn()">Save</button>
   <button
     mat-icon-button
+    type="button"
     class="example-icon"
     aria-label="Example icon-button with share icon"
+    (click)="goToDocs()"
   >
-    <mat-icon (click)="goToDocs()">home</mat-icon>
+    <mat-icon>home</mat-icon>
   </button>
 </mat-toolbar>
