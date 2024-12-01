@@ -37,7 +37,7 @@ export class NavDocEditComponent {
 
   goToDocs() {
     if (this.docsService.editMode === false) {
-      this.router.navigate(['./'], { relativeTo: this.route });
+      this.router.navigate(['../docs'], { relativeTo: this.route });
     } else {
       this.router.navigate(['../../docs'], { relativeTo: this.route });
     }
