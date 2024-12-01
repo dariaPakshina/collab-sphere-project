@@ -48,3 +48,38 @@ img {
   background-color: rgb(225, 108, 108);
   color: white !important;
 }
+
+@media (max-width: 1070px) {
+  .light-btns {
+    margin-left: 2rem;
+  }
+}
+
+@media (max-width: 810px) {
+  .btn-new {
+    margin-right: 0.5rem;
+  }
+}
+
+@media (max-width: 580px) {
+  .name {
+    display: none;
+  }
+  .light-btns {
+    margin-left: 0.5rem;
+  }
+}
+
+@media (max-width: 420px) {
+  img {
+    display: none;
+  }
+
+  .light-btns {
+    margin-left: 0;
+  }
+
+  .light-btn {
+    margin-right: 0.2rem;
+  }
+}

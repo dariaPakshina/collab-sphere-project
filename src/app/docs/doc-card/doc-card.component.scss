@@ -70,3 +70,59 @@ app-delete-window {
   top: 50%;
   right: 50%;
 }
+
+@media (max-width: 520px) {
+  mat-card-title {
+    font-size: 110%;
+    width: 10rem;
+  }
+
+  mat-card-subtitle {
+    font-size: 80%;
+    width: 10rem;
+  }
+
+  mat-card-content {
+    font-size: 80%;
+    width: 10rem;
+  }
+
+  mat-card-header {
+    height: 4rem !important;
+    width: 10rem;
+    padding: 12px 12px 0;
+  }
+
+  .doc-card {
+    height: 7rem;
+    width: 12rem;
+  }
+}
+
+@media (max-width: 410px) {
+  mat-card-title {
+    font-size: 110%;
+    width: 8rem;
+  }
+
+  mat-card-subtitle {
+    font-size: 80%;
+    width: 8rem;
+  }
+
+  mat-card-content {
+    font-size: 80%;
+    width: 8rem;
+  }
+
+  mat-card-header {
+    height: 4rem !important;
+    width: 8rem;
+    padding: 10px 10px 0;
+  }
+
+  .doc-card {
+    height: 7rem;
+    width: 10rem;
+  }
+}

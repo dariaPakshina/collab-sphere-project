@@ -1,11 +1,10 @@
-@use "@angular/material" as mat;
-
 .box {
   margin: 4rem 5rem 0 5rem !important;
+  padding-bottom: 2rem;
 }
 
 .container {
-  margin: 4rem 5rem 0 5rem !important;
+  max-width: 100%;
   display: grid;
   column-gap: 1.5rem;
   row-gap: 3rem;
@@ -16,6 +15,6 @@
 
 mat-spinner {
   position: absolute;
-  top: 50%;
-  right: 50%;
+  top: 45%;
+  right: 45%;
 }

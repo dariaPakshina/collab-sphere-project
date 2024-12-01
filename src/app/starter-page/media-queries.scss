@@ -61,16 +61,9 @@
   }
 }
 
-@media (min-height: 800px) {
+@media (min-height: 850px) {
   .hero {
     height: calc(100vh - 56px - 12rem);
     padding-top: 12rem;
-  }
-}
-
-@media (min-height: 595px) {
-  .hero {
-    height: calc(100vh - 56px - 5rem);
-    padding-top: 5rem;
   }
 }
