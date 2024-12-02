@@ -8,7 +8,12 @@
 
     <span class="example-spacer"></span>
 
-    <button class="btn-signup" mat-flat-button type="button" routerLink="/auth">
+    <button
+      class="btn-signup"
+      mat-flat-button
+      type="button"
+      (click)="onClick()"
+    >
       Sign up
     </button>
   </mat-toolbar>
@@ -25,7 +30,7 @@
         mat-raised-button
         class="btn-start"
         type="button"
-        routerLink="/auth"
+        (click)="onClick()"
       >
         Get started
       </button>

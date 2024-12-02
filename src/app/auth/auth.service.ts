@@ -25,6 +25,7 @@ export class AuthService {
   private loginExpirTimer: any;
   errorMode = false;
   errorMessage = '';
+  isAuth = false;
 
   inputEmail: string = '';
   inputPassword: string = '';
@@ -37,6 +38,7 @@ export class AuthService {
     this.user.next(user);
     this.autoLogOut();
     localStorage.setItem('userData', JSON.stringify(user));
+    this.isAuth = true;
   }
 
   handleErrors(errorRes: any) {
@@ -94,6 +96,7 @@ export class AuthService {
     }
     this.router.navigate([''], { relativeTo: this.route });
     localStorage.removeItem('userData');
+    this.isAuth = true;
     if (this.loginExpirTimer) {
       clearTimeout(this.loginExpirTimer);
     }
@@ -112,6 +115,7 @@ export class AuthService {
     if (loadedUser) {
       this.user.next(loadedUser);
       this.autoLogOut();
+      this.isAuth = true;
     }
   }
 
