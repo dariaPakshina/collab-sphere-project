@@ -11,24 +11,43 @@ export const routes: Routes = [
   {
     path: 'doc-edit',
     title: 'Edit | CollabSphere',
-    component: DocEditComponent,
+    loadComponent: () =>
+      import('./doc-edit/doc-edit.component').then(
+        (mod) => mod.DocEditComponent
+      ),
     canDeactivate: [deactivateGuard],
     canActivate: [authGuard],
   },
   {
     path: 'doc-edit/:id',
     title: 'Edit | CollabSphere',
-    component: DocEditComponent,
+    loadComponent: () =>
+      import('./doc-edit/doc-edit.component').then(
+        (mod) => mod.DocEditComponent
+      ),
     canDeactivate: [deactivateGuard],
     canActivate: [authGuard],
   },
-  { path: 'auth', title: 'Sign up | CollabSphere', component: AuthComponent },
+  {
+    path: 'auth',
+    title: 'Sign up | CollabSphere',
+    loadComponent: () =>
+      import('./auth/auth.component').then((mod) => mod.AuthComponent),
+  },
   {
     path: 'docs',
     title: 'Documents | CollabSphere',
-    component: DocsComponent,
+    loadComponent: () =>
+      import('./docs/docs.component').then((mod) => mod.DocsComponent),
     canActivate: [authGuard],
   },
   { path: '', component: StarterPageComponent },
-  { path: '**', title: 'Page Not Found', component: PageNotFoundComponent },
+  {
+    path: '**',
+    title: 'Page Not Found',
+    loadComponent: () =>
+      import('./page-not-found/page-not-found.component').then(
+        (mod) => mod.PageNotFoundComponent
+      ),
+  },
 ];
