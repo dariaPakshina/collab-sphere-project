@@ -7,6 +7,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { DocEditComponent } from '../doc-edit.component';
 import { DocsService } from '../../docs/docs.service';
+import { RealtimeService } from '../../realtime.service';
 
 @Component({
   selector: 'app-nav-doc-edit',
@@ -29,10 +30,17 @@ export class NavDocEditComponent {
     this.btnClick.emit();
   }
 
+  @Output() shareClick = new EventEmitter<void>();
+  onShare() {
+    console.log('share btn clicked');
+    this.shareClick.emit();
+  }
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private docsService: DocsService
+    private docsService: DocsService,
+    private realtimeService: RealtimeService
   ) {}
 
   goToDocs() {

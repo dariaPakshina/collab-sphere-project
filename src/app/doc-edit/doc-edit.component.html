@@ -1,4 +1,7 @@
-<app-nav-doc-edit (btnClick)="onBtnSave()"></app-nav-doc-edit>
+<app-nav-doc-edit
+  (btnClick)="onBtnSave()"
+  (shareClick)="onShareClick()"
+></app-nav-doc-edit>
 
 <div class="mat-spinner" *ngIf="loading">
   <mat-spinner mode="indeterminate"></mat-spinner>
@@ -81,11 +84,14 @@
         formControlName="content"
         (click)="updateButtonStates()"
         (input)="updateButtonStates()"
+        (keyup)="onKeyUp($event)"
       ></textarea>
     </mat-form-field>
   </div>
 </form>
 
-<!-- <app-navigate
-  (btnClickSave)="onBtnSave()"
-></app-navigate> -->
+<app-share-dialog
+  #dialog
+  *ngIf="!loading"
+  (dialogShareClick)="onShare()"
+></app-share-dialog>

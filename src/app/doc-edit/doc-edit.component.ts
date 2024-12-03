@@ -4,39 +4,28 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  Renderer2,
   ViewChild,
 } from '@angular/core';
 import { NavDocEditComponent } from './nav-doc-edit/nav-doc-edit.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  FormControl,
-  FormGroup,
-  NgModel,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../api.service';
 import { Doc } from '../doc.model';
-import {
-  ActivatedRoute,
-  Event,
-  NavigationStart,
-  Params,
-  Router,
-  RouterOutlet,
-} from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DocsService } from '../docs/docs.service';
 import { Subscription } from 'rxjs';
-import { JsonPipe, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
 import { DocCardComponent } from '../docs/doc-card/doc-card.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RealtimeService } from '../realtime.service';
 import {
-  DialogAnimationsExampleDialog,
-  NavigateComponent,
-} from './navigate/navigate.component';
+  DialogOverviewExampleDialog,
+  ShareDialogComponent,
+} from './share-dialog/share-dialog.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-doc-edit',
@@ -44,17 +33,20 @@ import {
   imports: [
     NavDocEditComponent,
     MatFormFieldModule,
-    JsonPipe,
     MatInputModule,
     NgIf,
     ReactiveFormsModule,
     MatButtonModule,
-    RouterOutlet,
     MatProgressSpinnerModule,
-    NavigateComponent,
+    ShareDialogComponent,
+    DialogOverviewExampleDialog,
   ],
   templateUrl: './doc-edit.component.html',
   styleUrls: ['./doc-edit.component.scss', './media-queries.scss'],
+  providers: [
+    { provide: MatDialogRef, useValue: {} },
+    { provide: MAT_DIALOG_DATA, useValue: {} },
+  ],
 })
 export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   addForm: FormGroup = new FormGroup({});
@@ -70,7 +62,8 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute,
     private router: Router,
     private docsService: DocsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private realtimeService: RealtimeService
   ) {}
 
   @ViewChild('textarea', { static: false })
@@ -253,4 +246,46 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
   }
+
+  //=======================================================
+
+  @ViewChild('dialog', { static: false })
+  dialog!: ShareDialogComponent;
+
+  onShareClick() {
+    this.dialog.openDialog();
+  }
+
+  onShare() {
+    this.realtimeService.initChannel(this.id);
+    this.realtimeService.cursorPos$.subscribe((payload) => {
+      if (payload) {
+        const { userId, pos } = payload.payload;
+        if (userId !== this.id) {
+          this.updateRemoteCursor(userId, pos);
+        }
+      }
+    });
+
+    // this.realtimeService.shareDocument(this.id, )
+  }
+
+  onKeyUp(event: KeyboardEvent) {
+    const cursorPosition = this.getCursorPosition();
+    this.realtimeService.sendCursorPos(this.id, cursorPosition);
+  }
+
+  getCursorPosition() {
+    const selection = window.getSelection();
+    return selection;
+  }
+
+  remoteCursors: { [key: string]: any } = {};
+
+  updateRemoteCursor(userId: number, pos: any) {
+    this.remoteCursors[userId] = pos;
+    console.log('Updated remote cursor:', userId, pos);
+  }
+
+  // shareUrl = `${window.location.origin}/doc-edit/${this.id}?shared_link=${this.docs?.shared_link}`;
 }

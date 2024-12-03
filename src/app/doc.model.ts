@@ -3,6 +3,7 @@ export interface Doc {
   title: string;
   edittime: string;
   content: string;
+  shared_users: string[] | null;
 }
 
 export class Doc {
@@ -10,11 +11,19 @@ export class Doc {
   public title: string;
   public edittime: string;
   public content: string;
+  public shared_users: string[] | null;
 
-  constructor(id: number, title: string, edittime: string, content: string) {
+  constructor(
+    id: number,
+    title: string,
+    edittime: string,
+    content: string,
+    shared_users: string[] | null
+  ) {
     this.id = id;
     this.title = title;
     this.edittime = edittime;
     this.content = content;
+    this.shared_users = shared_users;
   }
 }
