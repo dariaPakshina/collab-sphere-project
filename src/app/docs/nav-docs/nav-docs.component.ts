@@ -10,6 +10,7 @@ import { DocsService } from '../docs.service';
 import { ApiService } from '../../api.service';
 import { DocCardComponent } from '../doc-card/doc-card.component';
 import { AuthService } from '../../auth/auth.service';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-nav-docs',
@@ -30,7 +31,8 @@ export class NavDocsComponent {
     public sortService: SortService,
     public docsService: DocsService,
     public apiService: ApiService,
-    public authService: AuthService
+    public authService: AuthService,
+    private clipboard: Clipboard
   ) {}
 
   onLatest() {
@@ -59,5 +61,24 @@ export class NavDocsComponent {
 
   onLogOut() {
     this.authService.logOut();
+  }
+
+  //--------------------------
+
+  copiedID = false;
+
+  async onCopy() {
+    const userId = await this.apiService.getUserId();
+    if (!userId) {
+      console.error('No user ID available. Cannot fetch ID.');
+      return;
+    }
+
+    this.clipboard.copy(userId);
+
+    this.copiedID = true;
+    setTimeout(() => {
+      this.copiedID = false;
+    }, 3000);
   }
 }

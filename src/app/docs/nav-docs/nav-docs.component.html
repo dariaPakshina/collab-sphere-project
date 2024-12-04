@@ -83,6 +83,22 @@
   </div>
 
   <span class="example-spacer"></span>
+
+  <button
+    *ngIf="copiedID === false; else copied"
+    class="light-btn"
+    mat-button
+    (click)="onCopy()"
+  >
+    <mat-icon>file_copy</mat-icon>Copy ID
+  </button>
+
+  <ng-template #copied>
+    <button class="light-btn" mat-button>
+      <mat-icon>check</mat-icon>Copied
+    </button>
+  </ng-template>
+
   <button
     class="btn-new"
     mat-flat-button
