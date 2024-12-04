@@ -95,6 +95,8 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
         this.docs = docs;
       }
     );
+
+    this.realtimeService.docID = this.id;
   }
 
   private async loadDocs() {
@@ -252,23 +254,30 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('dialog', { static: false })
   dialog!: ShareDialogComponent;
 
-  onShareClick() {
+  onShareNav() {
     this.dialog.openDialog();
   }
 
-  onShare() {
-    this.realtimeService.initChannel(this.id);
-    this.realtimeService.cursorPos$.subscribe((payload) => {
-      if (payload) {
-        const { userId, pos } = payload.payload;
-        if (userId !== this.id) {
-          this.updateRemoteCursor(userId, pos);
-        }
-      }
-    });
+  // async onShareParent() {
+  //   console.log('doc shared from edit-doc');
+  //   const userId = await this.apiService.getUserId();
+  //   if (!userId) {
+  //     console.error('No user ID available. Cannot fetch ID.');
+  //     return;
+  //   }
 
-    // this.realtimeService.shareDocument(this.id, )
-  }
+  //   this.realtimeService.initChannel(this.id);
+  //   this.realtimeService.cursorPos$.subscribe((payload) => {
+  //     if (payload) {
+  //       const { userId, pos } = payload.payload;
+  //       if (userId !== userId) {
+  //         this.updateRemoteCursor(userId, pos);
+  //       }
+  //     }
+  //   });
+
+  //   this.realtimeService.shareDocument(this.id, userId);
+  // }
 
   onKeyUp(event: KeyboardEvent) {
     const cursorPosition = this.getCursorPosition();

@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { Doc } from './doc.model';
 import { createClient } from '@supabase/supabase-js';
 import { DocsService } from './docs/docs.service';
+import { UUID } from 'crypto';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +28,7 @@ export class ApiService {
 
       if (user) {
         this.userId = user.id;
-        return user.id;
+        return this.userId;
       }
       return null;
     } catch (error) {

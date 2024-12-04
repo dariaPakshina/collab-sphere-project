@@ -10,6 +10,7 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { RealtimeService } from '../../realtime.service';
 
 @Component({
   selector: 'app-share-dialog',
@@ -47,6 +48,7 @@ export class ShareDialogComponent {
 })
 export class DialogOverviewExampleDialog {
   readonly dialogRef = inject(MatDialogRef<DialogOverviewExampleDialog>);
+  realtimeService = inject(RealtimeService);
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -54,9 +56,11 @@ export class DialogOverviewExampleDialog {
 
   userId = '';
 
-  @Output() dialogShareClick = new EventEmitter<void>();
-  onShare() {
+  // @Output() dialogShareClick = new EventEmitter<void>();
+  onShareChild() {
     console.log('share btn clicked');
-    this.dialogShareClick.emit();
+    this.realtimeService.onDialogShare();
+    // this.dialogShareClick.emit();
+    this.dialogRef.close();
   }
 }

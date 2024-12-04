@@ -2,6 +2,7 @@ import { inject, Injectable, ViewChild } from '@angular/core';
 import { ApiService } from './api.service';
 import { BehaviorSubject } from 'rxjs';
 import { RealtimePresence } from '@supabase/supabase-js';
+import { DocEditComponent } from './doc-edit/doc-edit.component';
 
 @Injectable({
   providedIn: 'root',
@@ -9,34 +10,46 @@ import { RealtimePresence } from '@supabase/supabase-js';
 export class RealtimeService {
   apiService = inject(ApiService);
   supabase = this.apiService.supabase;
-  channel = this.supabase.channel(`document-${this.apiService.index}`);
 
   cursorPosSubject = new BehaviorSubject<any>(null);
   cursorPos$ = this.cursorPosSubject.asObservable();
 
-  initChannel(doc: number) {
+  userID!: string | null;
+  docID!: number;
+
+  async onDialogShare() {
+    this.userID = await this.apiService.getUserId();
+
+    this.initChannel();
+    this.shareDocument(this.docID, this.userID);
+
+    console.log('channel initialized');
+    console.log('document shared');
+  }
+
+  channel = this.supabase.channel(`${this.docID}`);
+
+  initChannel() {
     this.channel
       .on('broadcast', { event: 'cursor-pos' }, (payload: any) => {
         this.cursorPosSubject.next(payload);
       })
       .subscribe();
+    console.log('channel initialized');
   }
 
-  async shareDocument(docId: number, userId: number) {
-    const { data, error } = await this.supabase
-      .from('docs')
-      .update({
-        shared_users: this.supabase.raw('array_append(shared_users, ?)', [
-          userId,
-        ]),
-      })
-      .match({ id: docId });
+  async shareDocument(docId: number, userId: string | null) {
+    console.log(docId, userId);
+    const { error } = await this.supabase.rpc('append_to_shared_users', {
+      doc_id: docId,
+      user_index: userId,
+    });
 
     if (error) {
-      console.error(error);
-      return null;
+      console.error('Error while calling append_to_shared_users:', error);
+    } else {
+      return;
     }
-    return data;
   }
 
   sendCursorPos(userId: number, pos: any) {
@@ -48,6 +61,7 @@ export class RealtimeService {
         position: pos,
       },
     });
+    console.log('cursor position sent');
   }
 
   activeUsers: { [userId: string]: RealtimePresence } = {};

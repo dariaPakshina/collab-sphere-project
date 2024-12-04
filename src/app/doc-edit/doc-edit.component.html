@@ -1,6 +1,6 @@
 <app-nav-doc-edit
   (btnClick)="onBtnSave()"
-  (shareClick)="onShareClick()"
+  (shareClick)="onShareNav()"
 ></app-nav-doc-edit>
 
 <div class="mat-spinner" *ngIf="loading">
@@ -90,8 +90,4 @@
   </div>
 </form>
 
-<app-share-dialog
-  #dialog
-  *ngIf="!loading"
-  (dialogShareClick)="onShare()"
-></app-share-dialog>
+<app-share-dialog #dialog *ngIf="!loading"></app-share-dialog>
