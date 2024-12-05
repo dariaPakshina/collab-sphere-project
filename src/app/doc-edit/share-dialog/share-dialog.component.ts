@@ -58,8 +58,8 @@ export class DialogOverviewExampleDialog {
 
   // @Output() dialogShareClick = new EventEmitter<void>();
   onShareChild() {
-    console.log('share btn clicked');
-    this.realtimeService.onDialogShare();
+    console.log('share btn clicked', this.userId);
+    this.realtimeService.onDialogShare(this.userId);
     // this.dialogShareClick.emit();
     this.dialogRef.close();
   }

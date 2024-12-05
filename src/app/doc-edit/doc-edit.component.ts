@@ -97,11 +97,17 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.realtimeService.docID = this.id;
+
+    this.realtimeService.cursorPos$.subscribe((payload) => {
+      if (payload) {
+        this.updateRemoteCursor(payload.userId, payload.position);
+      }
+    });
   }
 
   private async loadDocs() {
     try {
-      await this.apiService.fetchDocs();
+      await this.apiService.fetchDoc(this.id);
     } catch (error) {
       console.error('Error loading docs:', error);
     }
@@ -111,6 +117,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     let docTitle = '';
     let docContent = '';
     if (this.editMode && this.id) {
+      this.apiService.fetchDoc(this.id);
       const doc = this.docsService.getDoc(this.id);
       this.docsService.editMode = true;
 
@@ -279,14 +286,13 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   //   this.realtimeService.shareDocument(this.id, userId);
   // }
 
-  onKeyUp(event: KeyboardEvent) {
-    const cursorPosition = this.getCursorPosition();
-    this.realtimeService.sendCursorPos(this.id, cursorPosition);
-  }
-
   getCursorPosition() {
     const selection = window.getSelection();
     return selection;
+  }
+  onKeyUp(event: KeyboardEvent) {
+    const cursorPosition = this.getCursorPosition();
+    this.realtimeService.sendCursorPos(this.id, cursorPosition);
   }
 
   remoteCursors: { [key: string]: any } = {};
@@ -295,6 +301,4 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.remoteCursors[userId] = pos;
     console.log('Updated remote cursor:', userId, pos);
   }
-
-  // shareUrl = `${window.location.origin}/doc-edit/${this.id}?shared_link=${this.docs?.shared_link}`;
 }

@@ -8,6 +8,7 @@ import { ApiService } from '../api.service';
 })
 export class DocsService {
   docsChanged = new Subject<Doc[]>();
+  docChanged = new Subject<Doc>();
   editMode = false;
 
   private docs: Doc[] = [];
@@ -15,15 +16,16 @@ export class DocsService {
   setDocs(data: Doc[]) {
     this.docs = data;
     this.docsChanged.next(this.docs.slice());
+    console.log('setDocs', this.docs);
   }
 
-  // to access recipes copy from outside
   getDocs() {
     return this.docs.slice(); // copying an array
   }
 
   getDoc(id: number) {
     const doc = this.docs.find((doc) => doc.id === id);
+    console.log('getDoc', doc);
     return doc || null;
   }
 

@@ -17,10 +17,13 @@ export class RealtimeService {
   userID!: string | null;
   docID!: number;
 
-  async onDialogShare() {
-    this.userID = await this.apiService.getUserId();
+  async onDialogShare(userId: string) {
+    this.userID = userId;
 
     this.initChannel();
+    this.presenceJoin();
+    this.presenceLeave();
+    this.presenceSync();
     this.shareDocument(this.docID, this.userID);
 
     console.log('channel initialized');
@@ -32,6 +35,7 @@ export class RealtimeService {
   initChannel() {
     this.channel
       .on('broadcast', { event: 'cursor-pos' }, (payload: any) => {
+        console.log('Received cursor position broadcast:', payload);
         this.cursorPosSubject.next(payload);
       })
       .subscribe();
@@ -71,8 +75,8 @@ export class RealtimeService {
     this.channel
       .on('presence', { event: 'join' }, ({ newPresences }: any) => {
         newPresences.forEach((presence: any) => {
-          console.log(`${presence} joined`);
           this.activeUsers[presence.userId] = presence;
+          console.log(`${presence} joined`, this.activeUsers);
           this.displayNotif(`${presence.userId} has joined`);
         });
       })

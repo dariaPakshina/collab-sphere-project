@@ -89,19 +89,25 @@ export class ApiService {
     }
   }
 
-  // async fetchSharedDocument(documentId: string, sharedLink: string) {
-  //   const { data, error } = await this.supabase
-  //     .from('documents')
-  //     .select('*')
-  //     .eq('id', documentId)
-  //     .eq('shared_link', sharedLink);
+  async fetchDoc(doctId: number) {
+    try {
+      const { data, error } = await this.supabase
+        .from('docs')
+        .select('*')
+        .eq('id', doctId);
 
-  //   if (error || !data) {
-  //     console.error('Error fetching document:', error);
-  //     return null;
-  //   }
-  //   return data[0];
-  // }
+      if (error) {
+        console.error('Error fetching document:', error.message);
+        return;
+      }
+      if (data) {
+        console.log(data);
+        this.docsService.setDocs(data);
+      }
+    } catch (error) {
+      console.error('Unexpected error in fetchDoc:', error);
+    }
+  }
 
   //--------------
 
