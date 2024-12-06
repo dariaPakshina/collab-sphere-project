@@ -26,10 +26,6 @@ import { SortService } from './sort.service';
   imports: [
     NgFor,
     DocCardComponent,
-    MatButton,
-    RouterOutlet,
-    RouterLink,
-    RouterLinkActive,
     MatGridListModule,
     NavDocsComponent,
     MatProgressSpinnerModule,

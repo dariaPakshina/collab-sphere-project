@@ -39,7 +39,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
     MatButtonModule,
     MatProgressSpinnerModule,
     ShareDialogComponent,
-    DialogOverviewExampleDialog,
   ],
   templateUrl: './doc-edit.component.html',
   styleUrls: ['./doc-edit.component.scss', './media-queries.scss'],
@@ -73,9 +72,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('ctrlYBtn', { static: false })
   ctrlYBtn?: HTMLButtonElement;
 
-  userIdHost: string = '';
-
-  ngOnInit() {
+  async ngOnInit() {
     this.addForm = new FormGroup({
       title: new FormControl(null),
       content: new FormControl(null),
@@ -99,18 +96,19 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.realtimeService.docID = this.id;
-    this.realtimeService
-      .getUserIdHost()
-      .then((userIdHost) => (this.userIdHost = userIdHost));
-
-    // this.realtimeService.clearSharedUsers(this.id, this.userIdHost);
 
     this.realtimeService.cursorPos$.subscribe((payload) => {
       if (payload) {
         const { userId, position } = payload;
-        this.updateRemoteCursor(userId, position);
+        console.log('Received cursor update:', payload);
+        if (userId && position) {
+          this.updateRemoteCursor(userId, position);
+        }
       }
     });
+
+    const userIdShared = await this.apiService.getUserId();
+    this.realtimeService.initSharedAccount(this.id, userIdShared);
   }
 
   private async loadDocs() {
@@ -166,7 +164,9 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    this.realtimeService.unshareReload();
+  }
 
   canDeactivate(): boolean {
     if (this.saved === false) {

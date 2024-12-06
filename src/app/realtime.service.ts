@@ -26,8 +26,14 @@ export class RealtimeService {
   }
 
   async onDialogShare(userId: string) {
-    this.userIDShared = userId;
     this.userIDHost = await this.getUserIdHost();
+    this.userIDShared = userId;
+    console.log(
+      'onDialogShare: Host ID:',
+      this.userIDHost,
+      'Shared ID:',
+      this.userIDShared
+    );
 
     this.initChannel();
     this.presenceJoin();
@@ -35,25 +41,65 @@ export class RealtimeService {
     this.presenceSync();
     this.shareDocument(this.docID, this.userIDShared);
 
+    if (this.userIDHost) {
+      this.shareDocument(this.docID, this.userIDShared);
+    }
+
     this.sharingMode = true;
 
-    console.log('channel initialized');
-    console.log('document', this.docID, 'shared with', this.userIDShared);
+    console.log('Channel initialized for document:', this.docID);
+    console.log('Document shared with user:', this.userIDShared);
   }
 
   channel = this.supabase.channel(`${this.docID}`);
+
+  async initSharedAccount(docId: number, userId: string) {
+    const hostId = await this.fetchHostIdForDocument(docId);
+    this.userIDHost = hostId;
+
+    this.userIDShared = userId;
+
+    this.sharingMode = true;
+
+    console.log(
+      'Shared account initialized with Host ID:',
+      this.userIDHost,
+      'Shared ID:',
+      this.userIDShared
+    );
+
+    this.presenceJoin();
+    this.presenceLeave();
+    this.presenceSync();
+  }
+
+  async fetchHostIdForDocument(docId: number): Promise<string> {
+    const { data, error } = await this.supabase
+      .from('docs')
+      .select('user_id')
+      .eq('id', docId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching host ID for document:', error);
+      return '';
+    }
+
+    return data.user_id;
+  }
 
   initChannel() {
     this.channel
       .on('broadcast', { event: 'cursor-pos' }, (payload: any) => {
         this.sharingMode = true;
         console.log('Received cursor position broadcast:', payload);
-        const { userIDHost, position } = payload;
-        if (userIDHost && position) {
-          this.cursorPosSubject.next({ userIDHost, position });
+        const { userId, position } = payload;
+        if (userId && position) {
+          this.cursorPosSubject.next({ userId, position });
         }
       })
       .subscribe((status: any) => {
+        console.log('Subscription status:', status);
         if (status === 'SUBSCRIBED') {
           console.log('Channel subscribed for document ID:', this.docID);
         } else {
@@ -62,9 +108,10 @@ export class RealtimeService {
       });
   }
 
-  async shareDocument(docId: number, userId: string | null) {
+  async shareDocument(docId: number, userId: string) {
     console.log(docId, userId);
     this.sharingMode = true;
+
     const { error } = await this.supabase.rpc('append_to_shared_users', {
       doc_id: docId,
       user_index: userId,
@@ -73,14 +120,16 @@ export class RealtimeService {
     if (error) {
       console.error('Error while calling append_to_shared_users:', error);
     } else {
+      // this.initSharedAccount(docId, userId);
       return;
     }
   }
 
   sendCursorPos(pos: { start: number; end: number }) {
+    console.log(this.userIDShared, this.userIDHost, this.sharingMode);
     this.sharingMode = true;
     const payload = {
-      userId: this.userIDHost,
+      userId: this.userIDShared || this.userIDHost,
       position: pos,
     };
 
@@ -139,8 +188,8 @@ export class RealtimeService {
   }
 
   async unshareDocument(docId: number, userId: string) {
-    console.log(`Clearing shared users`);
-    const { error } = await this.supabase.rpc('clear_shared_users', {
+    console.log(`Clearing shared users`, docId, userId);
+    const { data, error } = await this.supabase.rpc('clear_shared_users', {
       doc_id: docId,
       requester_id: userId,
     });
@@ -148,15 +197,19 @@ export class RealtimeService {
     if (error) {
       console.error('Error while calling clear_shared_users:', error);
     } else {
-      console.log(`Successfully cleared shared users`);
+      console.log(`Successfully cleared shared users`, data);
     }
   }
 
-  unshare() {
+  async unshareReload() {
     this.sharingMode = false;
-    this.unshareDocument(this.docID, this.userIDHost).then(
-      this.supabase.removeChannel(this.channel)
-    );
+    this.userIDHost = await this.getUserIdHost();
+    this.unshareDocument(this.docID, this.userIDHost);
+  }
+
+  unshareBtn() {
+    this.unshareReload();
+    this.supabase.removeChannel(this.channel);
     console.log('channel removed');
   }
 }

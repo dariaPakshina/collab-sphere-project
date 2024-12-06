@@ -15,14 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './nav-doc-edit.component.html',
   styleUrls: ['./nav-doc-edit.component.scss', './media-queries.scss'],
   standalone: true,
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    RouterLink,
-    NgIf,
-    DocEditComponent,
-  ],
+  imports: [MatToolbarModule, MatIconModule, MatButtonModule, NgIf],
 })
 export class NavDocEditComponent {
   @Output() btnClick = new EventEmitter<void>();
@@ -41,7 +34,7 @@ export class NavDocEditComponent {
   private _snackBar = inject(MatSnackBar);
 
   onUnshare() {
-    this.realtimeService.unshare();
+    this.realtimeService.unshareBtn();
     this.openSnackBar('Sharing is off', 'Ok');
   }
 
