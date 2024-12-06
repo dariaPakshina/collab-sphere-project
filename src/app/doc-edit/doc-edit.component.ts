@@ -73,6 +73,8 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('ctrlYBtn', { static: false })
   ctrlYBtn?: HTMLButtonElement;
 
+  userIdHost: string = '';
+
   ngOnInit() {
     this.addForm = new FormGroup({
       title: new FormControl(null),
@@ -97,10 +99,16 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.realtimeService.docID = this.id;
+    this.realtimeService
+      .getUserIdHost()
+      .then((userIdHost) => (this.userIdHost = userIdHost));
+
+    // this.realtimeService.clearSharedUsers(this.id, this.userIdHost);
 
     this.realtimeService.cursorPos$.subscribe((payload) => {
       if (payload) {
-        this.updateRemoteCursor(payload.userId, payload.position);
+        const { userId, position } = payload;
+        this.updateRemoteCursor(userId, position);
       }
     });
   }
@@ -125,6 +133,8 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
         docTitle = doc.title;
         docContent = doc.content;
       } else {
+        this.saved = true;
+        this.router.navigate(['./page-not-found'], { relativeTo: this.route });
         console.error(`Document with ID ${this.id} not found.`);
       }
     }
@@ -265,39 +275,19 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dialog.openDialog();
   }
 
-  // async onShareParent() {
-  //   console.log('doc shared from edit-doc');
-  //   const userId = await this.apiService.getUserId();
-  //   if (!userId) {
-  //     console.error('No user ID available. Cannot fetch ID.');
-  //     return;
-  //   }
-
-  //   this.realtimeService.initChannel(this.id);
-  //   this.realtimeService.cursorPos$.subscribe((payload) => {
-  //     if (payload) {
-  //       const { userId, pos } = payload.payload;
-  //       if (userId !== userId) {
-  //         this.updateRemoteCursor(userId, pos);
-  //       }
-  //     }
-  //   });
-
-  //   this.realtimeService.shareDocument(this.id, userId);
-  // }
-
-  getCursorPosition() {
-    const selection = window.getSelection();
-    return selection;
+  getCursorPosition(textarea: HTMLTextAreaElement) {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    return { start, end };
   }
-  onKeyUp(event: KeyboardEvent) {
-    const cursorPosition = this.getCursorPosition();
-    this.realtimeService.sendCursorPos(this.id, cursorPosition);
+  onKeyUp(event: KeyboardEvent, textarea: HTMLTextAreaElement) {
+    const cursorPosition = this.getCursorPosition(textarea);
+    this.realtimeService.sendCursorPos(cursorPosition);
   }
 
   remoteCursors: { [key: string]: any } = {};
 
-  updateRemoteCursor(userId: number, pos: any) {
+  updateRemoteCursor(userId: number, pos: { start: number; end: number }) {
     this.remoteCursors[userId] = pos;
     console.log('Updated remote cursor:', userId, pos);
   }

@@ -7,7 +7,14 @@ import { DocCardComponent } from './doc-card/doc-card.component';
 import { MatButton } from '@angular/material/button';
 import { ApiService } from '../api.service';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  Event,
+  NavigationStart,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { NavDocsComponent } from './nav-docs/nav-docs.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SortPipe } from './sort.pipe';

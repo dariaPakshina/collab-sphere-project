@@ -14,20 +14,31 @@ export class RealtimeService {
   cursorPosSubject = new BehaviorSubject<any>(null);
   cursorPos$ = this.cursorPosSubject.asObservable();
 
-  userID!: string | null;
+  userIDShared!: string;
+  userIDHost!: string;
   docID!: number;
 
+  sharingMode = false;
+
+  async getUserIdHost() {
+    this.userIDHost = await this.apiService.getUserId();
+    return this.userIDHost;
+  }
+
   async onDialogShare(userId: string) {
-    this.userID = userId;
+    this.userIDShared = userId;
+    this.userIDHost = await this.getUserIdHost();
 
     this.initChannel();
     this.presenceJoin();
     this.presenceLeave();
     this.presenceSync();
-    this.shareDocument(this.docID, this.userID);
+    this.shareDocument(this.docID, this.userIDShared);
+
+    this.sharingMode = true;
 
     console.log('channel initialized');
-    console.log('document shared');
+    console.log('document', this.docID, 'shared with', this.userIDShared);
   }
 
   channel = this.supabase.channel(`${this.docID}`);
@@ -35,15 +46,25 @@ export class RealtimeService {
   initChannel() {
     this.channel
       .on('broadcast', { event: 'cursor-pos' }, (payload: any) => {
+        this.sharingMode = true;
         console.log('Received cursor position broadcast:', payload);
-        this.cursorPosSubject.next(payload);
+        const { userIDHost, position } = payload;
+        if (userIDHost && position) {
+          this.cursorPosSubject.next({ userIDHost, position });
+        }
       })
-      .subscribe();
-    console.log('channel initialized');
+      .subscribe((status: any) => {
+        if (status === 'SUBSCRIBED') {
+          console.log('Channel subscribed for document ID:', this.docID);
+        } else {
+          console.error('Failed to subscribe to channel:', status);
+        }
+      });
   }
 
   async shareDocument(docId: number, userId: string | null) {
     console.log(docId, userId);
+    this.sharingMode = true;
     const { error } = await this.supabase.rpc('append_to_shared_users', {
       doc_id: docId,
       user_index: userId,
@@ -56,70 +77,86 @@ export class RealtimeService {
     }
   }
 
-  sendCursorPos(userId: number, pos: any) {
-    this.channel.send({
+  sendCursorPos(pos: { start: number; end: number }) {
+    this.sharingMode = true;
+    const payload = {
+      userId: this.userIDHost,
+      position: pos,
+    };
+
+    const { error } = this.channel.send({
       type: 'broadcast',
       event: 'cursor-pos',
-      payload: {
-        userId: userId,
-        position: pos,
-      },
+      payload,
     });
-    console.log('cursor position sent');
+
+    if (error) {
+      console.error('Error sending cursor position:', error);
+    } else {
+      console.log('Cursor position sent:', payload);
+    }
   }
 
   activeUsers: { [userId: string]: RealtimePresence } = {};
 
   //Trigger notifications when users join or leave the session
   presenceJoin() {
-    this.channel
-      .on('presence', { event: 'join' }, ({ newPresences }: any) => {
-        newPresences.forEach((presence: any) => {
-          this.activeUsers[presence.userId] = presence;
-          console.log(`${presence} joined`, this.activeUsers);
-          this.displayNotif(`${presence.userId} has joined`);
-        });
-      })
-      .subscribe(async (status: any) => {
-        if (status === 'SUBSCRIBED') {
-          await this.channel.track({ online_at: new Date().toISOString() });
-        }
+    this.channel.on('presence', { event: 'join' }, ({ newPresences }: any) => {
+      newPresences.forEach((presence: any) => {
+        this.activeUsers[presence.userId] = presence;
+        console.log(`${presence} joined`, this.activeUsers);
+        this.displayNotif(`${presence.userId} has joined`);
       });
+    });
   }
 
   presenceLeave() {
-    this.channel
-      .on('presence', { event: 'leave' }, ({ leftPresences }: any) => {
+    this.channel.on(
+      'presence',
+      { event: 'leave' },
+      ({ leftPresences }: any) => {
         leftPresences.forEach((presence: any) => {
           console.log(`${presence.userId} left`);
           delete this.activeUsers[presence.userId];
           this.displayNotif(`${presence.userId} has left`);
         });
-      })
-      .subscribe(async (status: any) => {
-        if (status === 'SUBSCRIBED') {
-          await this.channel.track({ online_at: new Date().toISOString() });
-          await this.channel.untrack();
-        }
-      });
+      }
+    );
   }
 
   displayNotif(notif: string) {}
 
   //Keeps the active users list synchronized, displays current presence state.
   presenceSync() {
-    this.channel
-      .on('presence', { event: 'sync' }, () => {
-        const presenceState = this.channel.presenceState();
-        console.log('Synced presence state:', presenceState);
+    this.channel.on('presence', { event: 'sync' }, () => {
+      const presenceState = this.channel.presenceState();
+      console.log('Synced presence state:', presenceState);
 
-        // Update active users list
-        this.activeUsers = presenceState;
-      })
-      .subscribe(async (status: any) => {
-        if (status === 'SUBSCRIBED') {
-          await this.channel.track({ online_at: new Date().toISOString() });
-        }
-      });
+      // Update active users list
+      this.activeUsers = presenceState;
+      console.log(this.activeUsers, presenceState);
+    });
+  }
+
+  async unshareDocument(docId: number, userId: string) {
+    console.log(`Clearing shared users`);
+    const { error } = await this.supabase.rpc('clear_shared_users', {
+      doc_id: docId,
+      requester_id: userId,
+    });
+
+    if (error) {
+      console.error('Error while calling clear_shared_users:', error);
+    } else {
+      console.log(`Successfully cleared shared users`);
+    }
+  }
+
+  unshare() {
+    this.sharingMode = false;
+    this.unshareDocument(this.docID, this.userIDHost).then(
+      this.supabase.removeChannel(this.channel)
+    );
+    console.log('channel removed');
   }
 }

@@ -16,7 +16,6 @@ export class DocsService {
   setDocs(data: Doc[]) {
     this.docs = data;
     this.docsChanged.next(this.docs.slice());
-    console.log('setDocs', this.docs);
   }
 
   getDocs() {
@@ -25,7 +24,6 @@ export class DocsService {
 
   getDoc(id: number) {
     const doc = this.docs.find((doc) => doc.id === id);
-    console.log('getDoc', doc);
     return doc || null;
   }
 

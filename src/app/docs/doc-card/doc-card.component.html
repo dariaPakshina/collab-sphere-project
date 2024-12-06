@@ -1,5 +1,5 @@
 <mat-card
-  [routerLink]="['/doc-edit', doc?.id]"
+  [routerLink]="doc?.id ? ['/doc-edit', doc?.id] : ['./page-not-found']"
   class="doc-card"
   appearance="outlined"
   [id]="doc?.id"

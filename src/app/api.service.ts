@@ -18,7 +18,7 @@ export class ApiService {
     });
   }
 
-  public userId: string | null = null;
+  public userId: string = '';
 
   async getUserId() {
     try {
@@ -26,14 +26,11 @@ export class ApiService {
         data: { user },
       } = await this.supabase.auth.getUser();
 
-      if (user) {
-        this.userId = user.id;
-        return this.userId;
-      }
-      return null;
+      this.userId = user.id;
+      return this.userId;
     } catch (error) {
       console.error('Unexpected error in postDoc:', error);
-      return null;
+      return '';
     }
   }
 
@@ -101,7 +98,6 @@ export class ApiService {
         return;
       }
       if (data) {
-        console.log(data);
         this.docsService.setDocs(data);
       }
     } catch (error) {
