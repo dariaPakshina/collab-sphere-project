@@ -108,7 +108,9 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     const userIdShared = await this.apiService.getUserId();
-    this.realtimeService.initSharedAccount(this.id, userIdShared);
+    if (this.realtimeService.sharingMode === true) {
+      this.realtimeService.initSharedAccount(this.id, userIdShared);
+    }
   }
 
   private async loadDocs() {
@@ -164,9 +166,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  ngAfterViewInit() {
-    this.realtimeService.unshareReload();
-  }
+  ngAfterViewInit() {}
 
   canDeactivate(): boolean {
     if (this.saved === false) {
@@ -177,6 +177,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.realtimeService.unshare();
   }
 
   //--------------------------------

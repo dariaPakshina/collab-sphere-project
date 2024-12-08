@@ -1,11 +1,10 @@
-import { Component, inject, Output, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { EventEmitter } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgIf } from '@angular/common';
-import { DocEditComponent } from '../doc-edit.component';
 import { DocsService } from '../../docs/docs.service';
 import { RealtimeService } from '../../realtime.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -20,13 +19,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class NavDocEditComponent {
   @Output() btnClick = new EventEmitter<void>();
   onSaveBtn() {
-    console.log('save btn clicked');
     this.btnClick.emit();
   }
 
   @Output() shareClick = new EventEmitter<void>();
   onShare() {
-    console.log('share btn clicked');
     this.shareClick.emit();
     this.openSnackBar('Sharing is on', 'Ok');
   }
@@ -34,7 +31,7 @@ export class NavDocEditComponent {
   private _snackBar = inject(MatSnackBar);
 
   onUnshare() {
-    this.realtimeService.unshareBtn();
+    this.realtimeService.unshare();
     this.openSnackBar('Sharing is off', 'Ok');
   }
 
