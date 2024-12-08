@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -49,12 +50,15 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   addForm: FormGroup = new FormGroup({});
-  id!: number;
+  // id!: number;
   editMode = false;
   docs?: Doc[];
   subscription!: Subscription;
   saved = false;
   loading = true;
+
+  @Input() id!: number; // Document ID passed as input
+  remoteCursors: { [key: string]: any } = {};
 
   constructor(
     private apiService: ApiService,
@@ -96,20 +100,54 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.realtimeService.docID = this.id;
+    const userId = await this.apiService.getUserId();
 
+    if (!this.realtimeService.sharingMode) {
+      // Check if the document is shared and initialize appropriately
+      const isShared = await this.checkIfShared(this.id, userId);
+      if (isShared) {
+        this.realtimeService.sharingMode = true;
+        await this.realtimeService.initSharedAccount(this.id, userId);
+      } else {
+        console.log('Edit mode: host or non-shared document.');
+      }
+    } else {
+      await this.realtimeService.initSharedAccount(this.id, userId);
+    }
+
+    // Observe cursor positions
     this.realtimeService.cursorPos$.subscribe((payload) => {
       if (payload) {
         const { userId, position } = payload;
         console.log('Received cursor update:', payload);
-        if (userId && position) {
-          this.updateRemoteCursor(userId, position);
-        }
+        this.updateRemoteCursor(userId, position);
       }
     });
+  }
 
-    const userIdShared = await this.apiService.getUserId();
-    if (this.realtimeService.sharingMode === true) {
-      this.realtimeService.initSharedAccount(this.id, userIdShared);
+  async checkIfShared(docId: number, userId: string): Promise<boolean> {
+    try {
+      const { data, error } = await this.realtimeService.supabase
+        .from('docs')
+        .select('shared_users')
+        .eq('id', docId)
+        .single();
+
+      if (error) {
+        console.error('Error checking shared users:', error);
+        return false;
+      }
+
+      if (data && Array.isArray(data.shared_users)) {
+        console.log('shared user found, allow subscription');
+        return data.shared_users.includes(userId);
+      }
+
+      console.warn('shared_users field is not an array or is missing.');
+      return false;
+    } catch (err) {
+      console.error('Unexpected error in checkIfShared:', err);
+      return false;
     }
   }
 
@@ -277,18 +315,15 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getCursorPosition(textarea: HTMLTextAreaElement) {
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    return { start, end };
+    return { start: textarea.selectionStart, end: textarea.selectionEnd };
   }
+
   onKeyUp(event: KeyboardEvent, textarea: HTMLTextAreaElement) {
     const cursorPosition = this.getCursorPosition(textarea);
     this.realtimeService.sendCursorPos(cursorPosition);
   }
 
-  remoteCursors: { [key: string]: any } = {};
-
-  updateRemoteCursor(userId: number, pos: { start: number; end: number }) {
+  updateRemoteCursor(userId: string, pos: { start: number; end: number }) {
     this.remoteCursors[userId] = pos;
     console.log('Updated remote cursor:', userId, pos);
   }
