@@ -79,12 +79,14 @@
     </div>
     <mat-form-field class="textarea" appearance="outline">
       <textarea
+        [value]="remoteText"
         #textarea
         matInput
         formControlName="content"
         (click)="updateButtonStates()"
         (input)="updateButtonStates()"
         (keyup)="onKeyUp($event, textarea)"
+        (input)="onTextChange($event)"
       ></textarea>
     </mat-form-field>
   </div>

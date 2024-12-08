@@ -22,6 +22,10 @@ export class RealtimeService {
 
   userRole: 'host' | 'shared' | null = null;
 
+  textarea!: any;
+  private contentSubject = new BehaviorSubject<string>('');
+  content$ = this.contentSubject.asObservable();
+
   async determineRole() {
     const currentUserId = await this.apiService.getUserId();
     if (currentUserId === this.userIDHost) {
@@ -83,6 +87,17 @@ export class RealtimeService {
       .on('presence', { event: 'sync' }, () => {
         const newState = this.channel?.presenceState();
         console.log('Presence sync:', newState);
+      })
+      .on('broadcast', { event: 'text-update' }, (payload: any) => {
+        if (
+          payload.payload.userId ===
+          (this.userRole === 'host' ? this.userIDHost : this.userIDShared)
+        ) {
+          return; // ignores updates from the same user
+        }
+
+        this.contentSubject.next(payload.payload.content);
+        console.log('Broadcast received:', payload);
       })
       .subscribe((status: string) => {
         console.log('Subscription status:', status);
@@ -184,6 +199,19 @@ export class RealtimeService {
     }
 
     return data.user_id;
+  }
+
+  sendTextUpdate(content: string) {
+    const payload = {
+      userId: this.userRole === 'host' ? this.userIDHost : this.userIDShared,
+      content,
+    };
+    this.channel?.send({
+      type: 'broadcast',
+      event: 'text-update',
+      payload,
+    });
+    console.log('Text update sent:', payload);
   }
 
   async unshare() {

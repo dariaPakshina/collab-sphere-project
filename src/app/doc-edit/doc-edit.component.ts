@@ -52,6 +52,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   subscription!: Subscription;
   saved = false;
   loading = true;
+  remoteText = '';
 
   @Input() id!: number;
   remoteCursors: { [key: string]: any } = {};
@@ -97,6 +98,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     );
 
+    this.realtimeService.textarea = this.textarea;
     this.realtimeService.docID = this.id;
     const userId = await this.apiService.getUserId();
 
@@ -122,9 +124,19 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
         );
       }
     });
+
+    this.realtimeService.content$.subscribe((content) => {
+      this.remoteText = content;
+      console.log('Updated textarea content:', content);
+    });
   }
 
   // ---------------------------------
+
+  onTextChange(event: Event) {
+    const newContent = this.textarea!.nativeElement.value;
+    this.realtimeService.sendTextUpdate(newContent);
+  }
 
   async checkIfShared(docId: number, userId: string): Promise<boolean> {
     try {
@@ -171,6 +183,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
       if (doc) {
         docTitle = doc.title;
         docContent = doc.content;
+        this.remoteText = doc.content;
       } else {
         this.saved = true;
         this.router.navigate(['./page-not-found'], { relativeTo: this.route });
@@ -324,6 +337,10 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   onKeyUp(event: KeyboardEvent, textarea: HTMLTextAreaElement) {
     const cursorPosition = this.getCursorPosition(textarea);
     this.realtimeService.sendCursorPos(cursorPosition);
+
+    const target = event.target as HTMLTextAreaElement;
+    const value = target.value;
+    this.realtimeService.sendTextUpdate(value);
   }
 
   updateRemoteCursor(userId: string, pos: { start: number; end: number }) {
