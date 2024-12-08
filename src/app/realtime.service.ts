@@ -20,6 +20,19 @@ export class RealtimeService {
 
   private channel: RealtimeChannel | null = null;
 
+  userRole: 'host' | 'shared' | null = null;
+
+  async determineRole() {
+    const currentUserId = await this.apiService.getUserId();
+    if (currentUserId === this.userIDHost) {
+      this.userRole = 'host';
+    } else if (currentUserId === this.userIDShared) {
+      this.userRole = 'shared';
+    } else {
+      console.error('Unable to determine user role.');
+    }
+  }
+
   async onDialogShare(userId: string) {
     this.userIDHost = await this.fetchHostIdForDoc(this.docID);
     this.userIDShared = userId;
@@ -29,6 +42,9 @@ export class RealtimeService {
       'Shared ID:',
       this.userIDShared
     );
+
+    this.userRole = 'host';
+    console.log('Host role set. Sharing document:', this.docID);
 
     this.shareDocument(this.docID, this.userIDShared);
 
@@ -46,10 +62,16 @@ export class RealtimeService {
       timeout: 20000,
     });
 
-    this.channel!.on('broadcast', { event: 'cursor-pos' }, (payload: any) => {
-      const { userId, position } = payload;
-      console.log('Received cursor position broadcast:', payload);
-      this.cursorPosSubject.next({ userId, position });
+    this.channel!.on('broadcast', { event: 'cursor-pos' }, (payload) => {
+      console.log('Received broadcast:', payload);
+
+      if (
+        payload['userId'] ===
+        (this.userRole === 'host' ? this.userIDHost : this.userIDShared)
+      ) {
+        return;
+      }
+      this.cursorPosSubject.next(payload);
     })
       .on('presence', { event: 'join' }, ({ key, newPresences }) => {
         console.log('User joined:', key, newPresences);
@@ -69,6 +91,10 @@ export class RealtimeService {
           console.error('Failed to subscribe:', status);
         }
       });
+
+    console.log('User Role:', this.userRole);
+    console.log('Host ID:', this.userIDHost);
+    console.log('Shared ID:', this.userIDShared);
   }
 
   async shareDocument(docId: number, sharedUserId: string) {
@@ -100,28 +126,34 @@ export class RealtimeService {
         userIDShared: this.userIDShared,
       });
 
+      this.userRole = 'shared';
+      console.log('Shared user role set for document:', this.docID);
+
       await this.initChannel(docId);
     }
   }
 
   sendCursorPos(pos: { start: number; end: number }) {
-    if (!this.channel) {
-      console.error('Channel not initialized.');
+    if (!this.userRole) {
+      console.error(
+        'User role is not determined. Cannot send cursor position.'
+      );
       return;
     }
 
-    const userId = this.userIDShared || this.userIDHost;
-    const payload = { userId, position: pos };
+    const payload = {
+      userId: this.userRole === 'host' ? this.userIDHost : this.userIDShared,
+      role: this.userRole,
+      position: pos,
+    };
 
-    this.channel
-      .send({
-        type: 'broadcast',
-        event: 'cursor-pos',
-        payload,
-      })
-      .then(() => {
-        console.log('Cursor position sent:', payload);
-      });
+    const {} = this.channel!.send({
+      type: 'broadcast',
+      event: 'cursor-pos',
+      payload,
+    });
+
+    console.log('Cursor position sent:', payload);
   }
 
   async fetchHostIdForDoc(docId: number): Promise<string> {
