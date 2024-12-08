@@ -22,10 +22,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { DocCardComponent } from '../docs/doc-card/doc-card.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RealtimeService } from '../realtime.service';
-import {
-  DialogOverviewExampleDialog,
-  ShareDialogComponent,
-} from './share-dialog/share-dialog.component';
+import { ShareDialogComponent } from './share-dialog/share-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -50,14 +47,13 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   addForm: FormGroup = new FormGroup({});
-  // id!: number;
   editMode = false;
   docs?: Doc[];
   subscription!: Subscription;
   saved = false;
   loading = true;
 
-  @Input() id!: number; // Document ID passed as input
+  @Input() id!: number;
   remoteCursors: { [key: string]: any } = {};
 
   constructor(
@@ -75,6 +71,8 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   ctrlZBtn?: HTMLButtonElement;
   @ViewChild('ctrlYBtn', { static: false })
   ctrlYBtn?: HTMLButtonElement;
+
+  // ---------------------------------
 
   async ngOnInit() {
     this.addForm = new FormGroup({
@@ -103,7 +101,6 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     const userId = await this.apiService.getUserId();
 
     if (!this.realtimeService.sharingMode) {
-      // Check if the document is shared and initialize appropriately
       const isShared = await this.checkIfShared(this.id, userId);
       if (isShared) {
         this.realtimeService.sharingMode = true;
@@ -115,15 +112,19 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
       await this.realtimeService.initSharedAccount(this.id, userId);
     }
 
-    // Observe cursor positions
     this.realtimeService.cursorPos$.subscribe((payload) => {
       if (payload) {
         const { userId, position } = payload;
         console.log('Received cursor update:', payload);
-        this.updateRemoteCursor(userId, position);
+        this.updateRemoteCursor(
+          payload.payload.userId,
+          payload.payload.position
+        );
       }
     });
   }
+
+  // ---------------------------------
 
   async checkIfShared(docId: number, userId: string): Promise<boolean> {
     try {
@@ -270,10 +271,10 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.editMode && this.id) {
       console.log('Editing document:', docData);
-      this.onSave(this.id, docData); // Pass the document ID for updates
+      this.onSave(this.id, docData);
     } else {
       console.log('Creating new document:', docData);
-      this.onSave(null, docData); // No ID means it's a new document
+      this.onSave(null, docData);
     }
   }
 
@@ -313,6 +314,8 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   onShareNav() {
     this.dialog.openDialog();
   }
+
+  // ---------------------------------
 
   getCursorPosition(textarea: HTMLTextAreaElement) {
     return { start: textarea.selectionStart, end: textarea.selectionEnd };
