@@ -58,6 +58,7 @@ export class RealtimeService {
     }
 
     this.docID = docId;
+
     this.channel = this.supabase.channel(`realtime:${docId}`, {
       timeout: 20000,
     });
@@ -95,6 +96,20 @@ export class RealtimeService {
     console.log('User Role:', this.userRole);
     console.log('Host ID:', this.userIDHost);
     console.log('Shared ID:', this.userIDShared);
+
+    this.trackChannel();
+  }
+
+  async trackChannel() {
+    const presencePayload = {
+      userId: this.userRole === 'host' ? this.userIDHost : this.userIDShared,
+    };
+    try {
+      await this.channel!.track(presencePayload);
+      console.log('Presence tracking initialized for:', presencePayload);
+    } catch (error) {
+      console.error('Failed to track presence:', error);
+    }
   }
 
   async shareDocument(docId: number, sharedUserId: string) {
