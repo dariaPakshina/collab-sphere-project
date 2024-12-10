@@ -2,11 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { BehaviorSubject } from 'rxjs';
 import { RealtimeChannel } from '@supabase/supabase-js';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from './auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RealtimeService {
+  authService = inject(AuthService);
   apiService = inject(ApiService);
   supabase = this.apiService.supabase;
 
@@ -15,16 +18,21 @@ export class RealtimeService {
 
   userIDShared!: string;
   userIDHost!: string;
+  userRole: 'host' | 'shared' | null = null;
+
+  sharedUsername = new BehaviorSubject<string>('');
+  sharedUsername$ = this.sharedUsername.asObservable();
+
   docID!: number;
   sharingMode = false;
 
   private channel: RealtimeChannel | null = null;
 
-  userRole: 'host' | 'shared' | null = null;
-
   textarea!: any;
   private contentSubject = new BehaviorSubject<string>('');
   content$ = this.contentSubject.asObservable();
+
+  private _snackBar = inject(MatSnackBar);
 
   async determineRole() {
     const currentUserId = await this.apiService.getUserId();
@@ -40,17 +48,11 @@ export class RealtimeService {
   async onDialogShare(userId: string) {
     this.userIDHost = await this.fetchHostIdForDoc(this.docID);
     this.userIDShared = userId;
-    console.log(
-      'onDialogShare: Host ID:',
-      this.userIDHost,
-      'Shared ID:',
-      this.userIDShared
-    );
 
     this.userRole = 'host';
-    console.log('Host role set. Sharing document:', this.docID);
 
     this.shareDocument(this.docID, this.userIDShared);
+    this.sharedUsername$.subscribe();
 
     this.sharingMode = true;
   }
@@ -62,6 +64,8 @@ export class RealtimeService {
     }
 
     this.docID = docId;
+
+    const userMap: Record<string, string> = {};
 
     this.channel = this.supabase.channel(`realtime:${docId}`, {
       timeout: 20000,
@@ -78,11 +82,23 @@ export class RealtimeService {
       }
       this.cursorPosSubject.next(payload);
     })
+      .on('broadcast', { event: 'user-joined' }, (payload: any) => {
+        console.log('Received broadcast payload:', payload);
+        this.sharedUsername.next(payload.payload.username);
+
+        console.log(`User joined: ${this.sharedUsername.getValue}`);
+        this.openSnackBar(`${this.sharedUsername.getValue()} joined`, 'Ok');
+      })
       .on('presence', { event: 'join' }, ({ key, newPresences }) => {
+        if (key === this.userIDHost) {
+          return;
+        }
         console.log('User joined:', key, newPresences);
+        this.openSnackBar(`${this.sharedUsername.getValue()} joined`, 'Ok');
       })
       .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
         console.log('User left:', key, leftPresences);
+        this.openSnackBar(`${this.sharedUsername.getValue()} left`, 'Ok');
       })
       .on('presence', { event: 'sync' }, () => {
         const newState = this.channel?.presenceState();
@@ -111,8 +127,9 @@ export class RealtimeService {
     console.log('User Role:', this.userRole);
     console.log('Host ID:', this.userIDHost);
     console.log('Shared ID:', this.userIDShared);
+    console.log(this.sharedUsername);
 
-    this.trackChannel();
+    // this.trackChannel();
   }
 
   async trackChannel() {
@@ -145,6 +162,9 @@ export class RealtimeService {
   }
 
   async initSharedAccount(docId: number, sharedUserId: string) {
+    const username = await this.authService.fetchUserName();
+    this.sharedUsername.next(username);
+
     if (!this.channel) {
       const hostId = await this.fetchHostIdForDoc(docId);
       this.userIDHost = hostId;
@@ -157,9 +177,17 @@ export class RealtimeService {
       });
 
       this.userRole = 'shared';
-      console.log('Shared user role set for document:', this.docID);
 
       await this.initChannel(docId);
+      this.trackChannel();
+    }
+
+    if (this.channel) {
+      this.channel.send({
+        type: 'broadcast',
+        event: 'user-joined',
+        payload: { username, userId: this.userIDShared },
+      });
     }
   }
 
@@ -212,6 +240,10 @@ export class RealtimeService {
       payload,
     });
     console.log('Text update sent:', payload);
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
   }
 
   async unshare() {

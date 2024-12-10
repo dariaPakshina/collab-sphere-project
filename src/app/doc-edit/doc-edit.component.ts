@@ -63,7 +63,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private docsService: DocsService,
     private cdr: ChangeDetectorRef,
-    private realtimeService: RealtimeService
+    public realtimeService: RealtimeService
   ) {}
 
   @ViewChild('textarea', { static: false })
