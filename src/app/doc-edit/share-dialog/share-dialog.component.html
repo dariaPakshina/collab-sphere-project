@@ -7,10 +7,18 @@
     <input
       matInput
       minlength="36"
+      maxlength="36"
       required
       [(ngModel)]="userId"
       #userIdInput="ngModel"
+      [pattern]="exactLengthPattern"
     />
+    <mat-error *ngIf="userIdInput.errors?.['required']"
+      >User ID is required.</mat-error
+    >
+    <mat-error *ngIf="userIdInput.errors?.['pattern']">
+      User ID must be exactly 36 characters.
+    </mat-error>
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>

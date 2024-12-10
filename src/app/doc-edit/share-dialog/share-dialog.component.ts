@@ -1,5 +1,5 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { FormsModule, NgModel } from '@angular/forms';
+import { Component, EventEmitter, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MatDialog,
@@ -11,6 +11,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RealtimeService } from '../../realtime.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-share-dialog',
@@ -43,6 +44,7 @@ export class ShareDialogComponent {
     FormsModule,
     MatDialogContent,
     MatDialogActions,
+    NgIf,
   ],
   styleUrl: './share-dialog.component.scss',
 })
@@ -55,12 +57,11 @@ export class DialogOverviewExampleDialog {
   }
 
   userId = '';
+  exactLengthPattern = '^.{36}$';
 
-  // @Output() dialogShareClick = new EventEmitter<void>();
   onShareChild() {
     console.log('share btn clicked', this.userId);
     this.realtimeService.onDialogShare(this.userId);
-    // this.dialogShareClick.emit();
     this.dialogRef.close();
   }
 }
