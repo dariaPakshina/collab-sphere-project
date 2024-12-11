@@ -12,6 +12,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RealtimeService } from '../../realtime.service';
 import { NgIf } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-share-dialog',
@@ -43,6 +45,7 @@ export class ShareDialogComponent {
     MatDialogTitle,
     FormsModule,
     MatDialogContent,
+    MatIcon,
     MatDialogActions,
     NgIf,
   ],
@@ -52,16 +55,30 @@ export class DialogOverviewExampleDialog {
   readonly dialogRef = inject(MatDialogRef<DialogOverviewExampleDialog>);
   realtimeService = inject(RealtimeService);
 
+  constructor(private clipboard: Clipboard) {}
+
   onNoClick(): void {
     this.dialogRef.close();
   }
 
   userId = '';
   exactLengthPattern = '^.{36}$';
+  currentURL = window.location.href;
 
   onShareChild() {
     console.log('share btn clicked', this.userId);
     this.realtimeService.onDialogShare(this.userId);
     this.dialogRef.close();
+  }
+
+  copiedID = false;
+
+  copy(url: string) {
+    this.clipboard.copy(url);
+
+    this.copiedID = true;
+    setTimeout(() => {
+      this.copiedID = false;
+    }, 3000);
   }
 }

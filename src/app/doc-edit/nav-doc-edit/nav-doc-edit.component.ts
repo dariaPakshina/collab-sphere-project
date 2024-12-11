@@ -8,6 +8,7 @@ import { NgIf } from '@angular/common';
 import { DocsService } from '../../docs/docs.service';
 import { RealtimeService } from '../../realtime.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApiService } from '../../api.service';
 
 @Component({
   selector: 'app-nav-doc-edit',
@@ -43,7 +44,8 @@ export class NavDocEditComponent {
     private router: Router,
     private route: ActivatedRoute,
     private docsService: DocsService,
-    public realtimeService: RealtimeService
+    public realtimeService: RealtimeService,
+    private apiService: ApiService
   ) {}
 
   goToDocs() {
@@ -52,5 +54,13 @@ export class NavDocEditComponent {
     } else {
       this.router.navigate(['../../docs'], { relativeTo: this.route });
     }
+  }
+
+  async shareBtnOff() {
+    const currentUserId = await this.apiService.getUserId();
+    if (currentUserId === this.realtimeService.userIDShared) {
+      return true;
+    }
+    return false;
   }
 }

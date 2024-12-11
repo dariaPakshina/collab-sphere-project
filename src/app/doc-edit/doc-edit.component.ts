@@ -24,6 +24,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RealtimeService } from '../realtime.service';
 import { ShareDialogComponent } from './share-dialog/share-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { SharedNavDocEditComponent } from './shared-nav-doc-edit/shared-nav-doc-edit.component';
 
 @Component({
   selector: 'app-doc-edit',
@@ -37,6 +38,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
     MatButtonModule,
     MatProgressSpinnerModule,
     ShareDialogComponent,
+    SharedNavDocEditComponent,
   ],
   templateUrl: './doc-edit.component.html',
   styleUrls: ['./doc-edit.component.scss', './media-queries.scss'],
@@ -53,6 +55,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   saved = false;
   loading = true;
   remoteText = '';
+  shareNav = false;
 
   @Input() id!: number;
   remoteCursors: { [key: string]: any } = {};
@@ -107,11 +110,13 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
       if (isShared) {
         this.realtimeService.sharingMode = true;
         await this.realtimeService.initSharedAccount(this.id, userId);
+        this.shareNav = true;
       } else {
         console.log('Edit mode: host or non-shared document.');
       }
     } else {
       await this.realtimeService.initSharedAccount(this.id, userId);
+      this.shareNav = true;
     }
 
     this.realtimeService.cursorPos$.subscribe((payload) => {
@@ -347,4 +352,6 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.remoteCursors[userId] = pos;
     console.log('Updated remote cursor:', userId, pos);
   }
+
+  //-----------------------------
 }
