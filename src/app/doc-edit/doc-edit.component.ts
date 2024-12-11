@@ -54,7 +54,6 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   subscription!: Subscription;
   saved = false;
   loading = true;
-  remoteText = '';
   sharedUser = false;
 
   @Input() id!: number;
@@ -134,7 +133,6 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.realtimeService.content$.subscribe((content) => {
-      this.remoteText = content;
       console.log('Updated textarea content:', content);
     });
   }
@@ -150,7 +148,6 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
       if (doc) {
         docTitle = doc.title;
         docContent = doc.content;
-        this.remoteText = doc.content;
       } else {
         this.saved = true;
         this.router.navigate(['./page-not-found'], { relativeTo: this.route });
