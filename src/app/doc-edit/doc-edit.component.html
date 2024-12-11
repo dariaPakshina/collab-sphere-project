@@ -1,10 +1,10 @@
 <app-nav-doc-edit
-  *ngIf="!shareNav"
+  *ngIf="!sharedUser"
   (btnClick)="onBtnSave()"
   (shareClick)="onShareNav()"
 ></app-nav-doc-edit>
 
-<app-shared-nav-doc-edit *ngIf="shareNav"></app-shared-nav-doc-edit>
+<app-shared-nav-doc-edit *ngIf="sharedUser"></app-shared-nav-doc-edit>
 
 <div class="mat-spinner" *ngIf="loading">
   <mat-spinner mode="indeterminate"></mat-spinner>
@@ -20,7 +20,13 @@
     <div class="mat-form-field">
       <mat-form-field class="inputForm" appearance="outline">
         <mat-label>Title</mat-label>
-        <input #input type="text" matInput formControlName="title" />
+        <input
+          #input
+          type="text"
+          matInput
+          formControlName="title"
+          [readonly]="sharedUser"
+        />
       </mat-form-field>
       <section>
         <div class="example-button-row">

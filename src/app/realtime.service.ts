@@ -20,6 +20,7 @@ export class RealtimeService {
   userIDShared!: string;
   userIDHost!: string;
   userRole: 'host' | 'shared' | null = null;
+  sharedUser = false;
 
   sharedUsername = new BehaviorSubject<string>('');
   sharedUsername$ = this.sharedUsername.asObservable();
@@ -86,20 +87,21 @@ export class RealtimeService {
       .on('broadcast', { event: 'user-joined' }, (payload: any) => {
         console.log('Received broadcast payload:', payload);
         this.sharedUsername.next(payload.payload.username);
-
-        console.log(`User joined: ${this.sharedUsername.getValue}`);
-        this.openSnackBar(`${this.sharedUsername.getValue()} joined`, 'Ok');
       })
       .on('presence', { event: 'join' }, ({ key, newPresences }) => {
         if (key === this.userIDHost) {
           return;
         }
         console.log('User joined:', key, newPresences);
-        this.openSnackBar(`${this.sharedUsername.getValue()} joined`, 'Ok');
+        if (!this.sharedUser) {
+          this.openSnackBar(`${this.sharedUsername.getValue()} joined`, 'Ok');
+        }
       })
       .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
         console.log('User left:', key, leftPresences);
-        this.openSnackBar(`${this.sharedUsername.getValue()} left`, 'Ok');
+        if (!this.sharedUser) {
+          this.openSnackBar(`${this.sharedUsername.getValue()} left`, 'Ok');
+        }
       })
       .on('presence', { event: 'sync' }, () => {
         const newState = this.channel?.presenceState();

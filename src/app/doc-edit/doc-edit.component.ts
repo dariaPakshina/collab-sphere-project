@@ -55,7 +55,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   saved = false;
   loading = true;
   remoteText = '';
-  shareNav = false;
+  sharedUser = false;
 
   @Input() id!: number;
   remoteCursors: { [key: string]: any } = {};
@@ -110,13 +110,16 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
       if (isShared) {
         this.realtimeService.sharingMode = true;
         await this.realtimeService.initSharedAccount(this.id, userId);
-        this.shareNav = true;
+
+        this.sharedUser = true;
+        this.realtimeService.sharedUser = true;
       } else {
         console.log('Edit mode: host or non-shared document.');
       }
     } else {
       await this.realtimeService.initSharedAccount(this.id, userId);
-      this.shareNav = true;
+      this.sharedUser = true;
+      this.realtimeService.sharedUser = true;
     }
 
     this.realtimeService.cursorPos$.subscribe((payload) => {
@@ -133,6 +136,31 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.realtimeService.content$.subscribe((content) => {
       this.remoteText = content;
       console.log('Updated textarea content:', content);
+    });
+  }
+
+  initForm() {
+    let docTitle = '';
+    let docContent = '';
+    if (this.editMode && this.id) {
+      this.apiService.fetchDoc(this.id);
+      const doc = this.docsService.getDoc(this.id);
+      this.docsService.editMode = true;
+
+      if (doc) {
+        docTitle = doc.title;
+        docContent = doc.content;
+        this.remoteText = doc.content;
+      } else {
+        this.saved = true;
+        this.router.navigate(['./page-not-found'], { relativeTo: this.route });
+        console.error(`Document with ID ${this.id} not found.`);
+      }
+    }
+
+    this.addForm.patchValue({
+      title: docTitle,
+      content: docContent,
     });
   }
 
@@ -175,31 +203,6 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     } catch (error) {
       console.error('Error loading docs:', error);
     }
-  }
-
-  initForm() {
-    let docTitle = '';
-    let docContent = '';
-    if (this.editMode && this.id) {
-      this.apiService.fetchDoc(this.id);
-      const doc = this.docsService.getDoc(this.id);
-      this.docsService.editMode = true;
-
-      if (doc) {
-        docTitle = doc.title;
-        docContent = doc.content;
-        this.remoteText = doc.content;
-      } else {
-        this.saved = true;
-        this.router.navigate(['./page-not-found'], { relativeTo: this.route });
-        console.error(`Document with ID ${this.id} not found.`);
-      }
-    }
-
-    this.addForm.patchValue({
-      title: docTitle,
-      content: docContent,
-    });
   }
 
   updateButtonStates() {
