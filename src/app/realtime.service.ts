@@ -118,6 +118,12 @@ export class RealtimeService {
         this.contentSubject.next(payload.payload.content);
         console.log('Broadcast received:', payload);
       })
+      .on('broadcast', { event: 'host-unshared' }, (payload: any) => {
+        console.log('Host unshared event received:', payload);
+        if (this.userRole === 'shared') {
+          this.openSnackBar(payload.payload.message, 'Ok');
+        }
+      })
       .subscribe((status: string) => {
         console.log('Subscription status:', status);
         if (status === 'SUBSCRIBED') {
@@ -264,16 +270,25 @@ export class RealtimeService {
 
   async unshare() {
     if (this.channel) {
+      this.channel.send({
+        type: 'broadcast',
+        event: 'host-unshared',
+        payload: { message: 'Sharing is stopped' },
+      });
+
       await this.supabase.removeChannel(this.channel);
       this.channel = null;
     }
     console.log('Channel removed.');
     this.sharingMode = false;
 
-    console.log(`Clearing shared users`, this.docID, this.userIDHost);
+    this.clearSharedUsers(this.docID, this.userIDHost);
+  }
+
+  async clearSharedUsers(doc_id: number, requester_id: string) {
     const { data, error } = await this.supabase.rpc('clear_shared_users', {
-      doc_id: this.docID,
-      requester_id: this.userIDHost,
+      doc_id: doc_id,
+      requester_id: requester_id,
     });
 
     if (error) {

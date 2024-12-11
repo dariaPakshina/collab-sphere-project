@@ -104,6 +104,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.realtimeService.textarea = this.textarea;
     this.realtimeService.docID = this.id;
     const userId = await this.apiService.getUserId();
+    this.realtimeService.clearSharedUsers(this.id, userId);
 
     if (!this.realtimeService.sharingMode) {
       const isShared = await this.checkIfShared(this.id, userId);
@@ -134,7 +135,6 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.realtimeService.content$.subscribe((content) => {
-      // this.remoteText = content;
       this.remoteText = content;
       console.log('Updated textarea content:', content);
     });
@@ -201,6 +201,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     try {
       await this.apiService.fetchDoc(this.id);
     } catch (error) {
+      this.router.navigate(['./page-not-found'], { relativeTo: this.route });
       console.error('Error loading docs:', error);
     }
   }
