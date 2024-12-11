@@ -44,6 +44,8 @@ export class RealtimeService {
       this.userRole = 'shared';
     } else {
       console.error('Unable to determine user role.');
+      this.sharingMode = false;
+      this.openSnackBar('Error: failed to share', 'Ok');
     }
   }
 
@@ -66,8 +68,6 @@ export class RealtimeService {
     }
 
     this.docID = docId;
-
-    const userMap: Record<string, string> = {};
 
     this.channel = this.supabase.channel(`realtime:${docId}`, {
       timeout: 20000,
@@ -123,7 +123,9 @@ export class RealtimeService {
         if (status === 'SUBSCRIBED') {
           console.log('Subscribed to channel successfully.');
         } else {
+          this.sharingMode = false;
           console.error('Failed to subscribe:', status);
+          this.openSnackBar('Error: failed to share', 'Ok');
         }
       });
 
@@ -143,7 +145,9 @@ export class RealtimeService {
       await this.channel!.track(presencePayload);
       console.log('Presence tracking initialized for:', presencePayload);
     } catch (error) {
+      this.sharingMode = false;
       console.error('Failed to track presence:', error);
+      this.openSnackBar('Error: failed to share', 'Ok');
     }
   }
 
@@ -157,7 +161,9 @@ export class RealtimeService {
     });
 
     if (error) {
+      this.sharingMode = false;
       console.error('Error while sharing document:', error);
+      this.openSnackBar('Error: failed to share', 'Ok');
       return;
     }
 
@@ -230,6 +236,9 @@ export class RealtimeService {
 
     if (error) {
       console.error('Error fetching host ID:', error);
+      this.openSnackBar('Error: failed to share', 'Ok');
+      this.sharingMode = false;
+
       return '';
     }
 
