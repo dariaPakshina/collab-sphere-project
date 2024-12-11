@@ -55,6 +55,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   saved = false;
   loading = true;
   sharedUser = false;
+  remoteText = '';
 
   @Input() id!: number;
   remoteCursors: { [key: string]: any } = {};
@@ -133,13 +134,14 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.realtimeService.content$.subscribe((content) => {
+      // this.remoteText = content;
+      this.remoteText = content;
       console.log('Updated textarea content:', content);
     });
   }
 
   initForm() {
     let docTitle = '';
-    let docContent = '';
     if (this.editMode && this.id) {
       this.apiService.fetchDoc(this.id);
       const doc = this.docsService.getDoc(this.id);
@@ -147,7 +149,8 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
       if (doc) {
         docTitle = doc.title;
-        docContent = doc.content;
+        this.remoteText = doc.content;
+        this.realtimeService.setInitialContent(this.remoteText);
       } else {
         this.saved = true;
         this.router.navigate(['./page-not-found'], { relativeTo: this.route });
@@ -157,7 +160,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.addForm.patchValue({
       title: docTitle,
-      content: docContent,
+      content: this.remoteText,
     });
   }
 

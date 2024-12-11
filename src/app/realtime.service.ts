@@ -31,7 +31,7 @@ export class RealtimeService {
   private channel: RealtimeChannel | null = null;
 
   textarea!: any;
-  private contentSubject = new BehaviorSubject<string>('');
+  contentSubject = new BehaviorSubject<string>('');
   content$ = this.contentSubject.asObservable();
 
   private _snackBar = inject(MatSnackBar);
@@ -192,6 +192,10 @@ export class RealtimeService {
         payload: { username, userId: this.userIDShared },
       });
     }
+  }
+
+  setInitialContent(content: string): void {
+    this.contentSubject.next(content);
   }
 
   sendCursorPos(pos: { start: number; end: number }) {
