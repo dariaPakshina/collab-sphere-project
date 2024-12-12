@@ -1,10 +1,9 @@
-import { inject, Injectable, ViewChild } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { BehaviorSubject } from 'rxjs';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from './auth/auth.service';
-import { NavDocEditComponent } from './doc-edit/nav-doc-edit/nav-doc-edit.component';
 
 @Injectable({
   providedIn: 'root',
@@ -69,9 +68,7 @@ export class RealtimeService {
 
     this.docID = docId;
 
-    this.channel = this.supabase.channel(`realtime:${docId}`, {
-      timeout: 20000,
-    });
+    this.channel = this.supabase.channel(`realtime:${docId}`);
 
     this.channel!.on('broadcast', { event: 'cursor-pos' }, (payload) => {
       console.log('Received broadcast:', payload);
@@ -112,7 +109,7 @@ export class RealtimeService {
           payload.payload.userId ===
           (this.userRole === 'host' ? this.userIDHost : this.userIDShared)
         ) {
-          return; // ignores updates from the same user
+          return;
         }
 
         this.contentSubject.next(payload.payload.content);
@@ -131,7 +128,7 @@ export class RealtimeService {
         } else {
           this.sharingMode = false;
           console.error('Failed to subscribe:', status);
-          this.openSnackBar('Error: failed to share', 'Ok');
+          // this.openSnackBar('Error: failed to share', 'Ok');
         }
       });
 
@@ -270,16 +267,27 @@ export class RealtimeService {
 
   async unshare() {
     if (this.channel) {
-      this.channel.send({
-        type: 'broadcast',
-        event: 'host-unshared',
-        payload: { message: 'Sharing is stopped' },
-      });
-
-      await this.supabase.removeChannel(this.channel);
-      this.channel = null;
+      this.channel
+        .send({
+          type: 'broadcast',
+          event: 'host-unshared',
+          payload: { message: 'Sharing is stopped' },
+        })
+        .then(() => {
+          this.channel!.unsubscribe().then(() => {
+            console.log('Channel unsubscribed');
+            this.removeChannel();
+          });
+        });
     }
-    console.log('Channel removed.');
+  }
+
+  async removeChannel() {
+    await this.supabase.removeChannel(this.channel).then(() => {
+      console.log('Channel removed');
+    });
+    this.channel = null;
+
     this.sharingMode = false;
 
     this.clearSharedUsers(this.docID, this.userIDHost);

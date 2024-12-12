@@ -6,28 +6,28 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
-} from '@angular/core';
-import { NavDocEditComponent } from './nav-doc-edit/nav-doc-edit.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ApiService } from '../api.service';
-import { Doc } from '../doc.model';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { DocsService } from '../docs/docs.service';
-import { Subscription } from 'rxjs';
-import { NgIf } from '@angular/common';
-import { ChangeDetectorRef } from '@angular/core';
-import { DocCardComponent } from '../docs/doc-card/doc-card.component';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RealtimeService } from '../realtime.service';
-import { ShareDialogComponent } from './share-dialog/share-dialog.component';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SharedNavDocEditComponent } from './shared-nav-doc-edit/shared-nav-doc-edit.component';
+} from "@angular/core";
+import { NavDocEditComponent } from "./nav-doc-edit/nav-doc-edit.component";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
+import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { ApiService } from "../api.service";
+import { Doc } from "../doc.model";
+import { ActivatedRoute, Params, Router } from "@angular/router";
+import { DocsService } from "../docs/docs.service";
+import { Subscription } from "rxjs";
+import { NgIf } from "@angular/common";
+import { ChangeDetectorRef } from "@angular/core";
+import { DocCardComponent } from "../docs/doc-card/doc-card.component";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { RealtimeService } from "../realtime.service";
+import { ShareDialogComponent } from "./share-dialog/share-dialog.component";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { SharedNavDocEditComponent } from "./shared-nav-doc-edit/shared-nav-doc-edit.component";
 
 @Component({
-  selector: 'app-doc-edit',
+  selector: "app-doc-edit",
   standalone: true,
   imports: [
     NavDocEditComponent,
@@ -40,8 +40,8 @@ import { SharedNavDocEditComponent } from './shared-nav-doc-edit/shared-nav-doc-
     ShareDialogComponent,
     SharedNavDocEditComponent,
   ],
-  templateUrl: './doc-edit.component.html',
-  styleUrls: ['./doc-edit.component.scss', './media-queries.scss'],
+  templateUrl: "./doc-edit.component.html",
+  styleUrls: ["./doc-edit.component.scss", "./media-queries.scss"],
   providers: [
     { provide: MatDialogRef, useValue: {} },
     { provide: MAT_DIALOG_DATA, useValue: {} },
@@ -55,7 +55,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   saved = false;
   loading = true;
   sharedUser = false;
-  remoteText = '';
+  remoteText = "";
 
   @Input() id!: number;
   remoteCursors: { [key: string]: any } = {};
@@ -69,11 +69,11 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     public realtimeService: RealtimeService
   ) {}
 
-  @ViewChild('textarea', { static: false })
+  @ViewChild("textarea", { static: false })
   textarea?: ElementRef<HTMLTextAreaElement>;
-  @ViewChild('ctrlZBtn', { static: false })
+  @ViewChild("ctrlZBtn", { static: false })
   ctrlZBtn?: HTMLButtonElement;
-  @ViewChild('ctrlYBtn', { static: false })
+  @ViewChild("ctrlYBtn", { static: false })
   ctrlYBtn?: HTMLButtonElement;
 
   // ---------------------------------
@@ -85,8 +85,8 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.route.params.subscribe((params: Params) => {
-      this.id = +params['id'];
-      this.editMode = params['id'] != null;
+      this.id = +params["id"];
+      this.editMode = params["id"] != null;
     });
 
     this.loadDocs().then(() => {
@@ -115,7 +115,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
         this.sharedUser = true;
         this.realtimeService.sharedUser = true;
       } else {
-        console.log('Edit mode: host or non-shared document.');
+        console.log("Edit mode: host or non-shared document.");
       }
     } else {
       await this.realtimeService.initSharedAccount(this.id, userId);
@@ -126,7 +126,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.realtimeService.cursorPos$.subscribe((payload) => {
       if (payload) {
         const { userId, position } = payload;
-        console.log('Received cursor update:', payload);
+        console.log("Received cursor update:", payload);
         this.updateRemoteCursor(
           payload.payload.userId,
           payload.payload.position
@@ -136,12 +136,12 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.realtimeService.content$.subscribe((content) => {
       this.remoteText = content;
-      console.log('Updated textarea content:', content);
+      console.log("Updated textarea content:", content);
     });
   }
 
   initForm() {
-    let docTitle = '';
+    let docTitle = "";
     if (this.editMode && this.id) {
       this.apiService.fetchDoc(this.id);
       const doc = this.docsService.getDoc(this.id);
@@ -153,7 +153,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
         this.realtimeService.setInitialContent(this.remoteText);
       } else {
         this.saved = true;
-        this.router.navigate(['./page-not-found'], { relativeTo: this.route });
+        this.router.navigate(["./page-not-found"], { relativeTo: this.route });
         console.error(`Document with ID ${this.id} not found.`);
       }
     }
@@ -174,25 +174,25 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   async checkIfShared(docId: number, userId: string): Promise<boolean> {
     try {
       const { data, error } = await this.realtimeService.supabase
-        .from('docs')
-        .select('shared_users')
-        .eq('id', docId)
+        .from("docs")
+        .select("shared_users")
+        .eq("id", docId)
         .single();
 
       if (error) {
-        console.error('Error checking shared users:', error);
+        console.error("Error checking shared users:", error);
         return false;
       }
 
       if (data && Array.isArray(data.shared_users)) {
-        console.log('shared user found, allow subscription');
+        console.log("shared user found, allow subscription");
         return data.shared_users.includes(userId);
       }
 
-      console.warn('shared_users field is not an array or is missing.');
+      console.warn("shared_users field is not an array or is missing.");
       return false;
     } catch (err) {
-      console.error('Unexpected error in checkIfShared:', err);
+      console.error("Unexpected error in checkIfShared:", err);
       return false;
     }
   }
@@ -201,13 +201,13 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     try {
       await this.apiService.fetchDoc(this.id);
     } catch (error) {
-      this.router.navigate(['./page-not-found'], { relativeTo: this.route });
-      console.error('Error loading docs:', error);
+      this.router.navigate(["./page-not-found"], { relativeTo: this.route });
+      console.error("Error loading docs:", error);
     }
   }
 
   updateButtonStates() {
-    if (!this.textarea?.nativeElement.classList.contains('ng-dirty')) {
+    if (!this.textarea?.nativeElement.classList.contains("ng-dirty")) {
       if (this.ctrlZBtn) {
         console.log(this.textarea?.nativeElement.classList);
         this.ctrlZBtn.disabled = true;
@@ -216,7 +216,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
         this.ctrlYBtn.disabled = true;
       }
     }
-    if (this.textarea?.nativeElement.classList.contains('ng-dirty')) {
+    if (this.textarea?.nativeElement.classList.contains("ng-dirty")) {
       if (this.ctrlZBtn) {
         this.ctrlZBtn.disabled = false;
       }
@@ -231,7 +231,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
   canDeactivate(): boolean {
     if (this.saved === false) {
-      return confirm('You have unsaved changes. Do you really want to leave?');
+      return confirm("You have unsaved changes. Do you really want to leave?");
     }
     return true;
   }
@@ -267,7 +267,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     event.stopPropagation();
     if (this.textarea) {
       this.textarea.nativeElement.focus();
-      document.execCommand('undo');
+      document.execCommand("undo");
     }
   }
 
@@ -276,31 +276,32 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     event.stopPropagation();
     if (this.textarea) {
       this.textarea.nativeElement.focus();
-      document.execCommand('redo');
+      document.execCommand("redo");
     }
   }
 
   // ---------------------------------
 
-  @ViewChild('form') form!: HTMLFormElement;
-
   onBtnSave() {
     this.addForm.valueChanges.subscribe((value) => {
-      console.log('Form value changed:', value);
+      console.log("Form value changed:", value);
     });
 
-    const docData = this.addForm.value;
+    this.realtimeService.unshare().then(() => {
+      this.addForm.patchValue({
+        content: this.remoteText,
+      });
+      const docData = this.addForm.value;
 
-    if (this.editMode && this.id) {
-      console.log('Editing document:', docData);
-      this.onSave(this.id, docData);
-    } else {
-      console.log('Creating new document:', docData);
-      this.onSave(null, docData);
-    }
+      if (this.editMode && this.id) {
+        console.log("Editing document:", docData);
+        this.onSave(this.id, docData);
+      } else {
+        console.log("Creating new document:", docData);
+        this.onSave(null, docData);
+      }
+    });
   }
-
-  @ViewChild(DocCardComponent) docCardComponent!: DocCardComponent;
 
   onSave(id: number | null, docData: Doc) {
     const editTime = new Date().toString();
@@ -312,7 +313,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
         .updateDoc(docData.title, editTime, docData.content)
         .then(() => {
           this.apiService.fetchDocs().then(() => {
-            this.router.navigate(['../../docs'], { relativeTo: this.route });
+            this.router.navigate(["../../docs"], { relativeTo: this.route });
             this.loading = false;
           });
         });
@@ -321,7 +322,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
         .postDoc(docData.title, editTime, docData.content)
         .then(() => {
           this.apiService.fetchDocs().then(() => {
-            this.router.navigate(['../docs'], { relativeTo: this.route });
+            this.router.navigate(["../docs"], { relativeTo: this.route });
             this.loading = false;
           });
         });
@@ -330,7 +331,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
   //=======================================================
 
-  @ViewChild('dialog', { static: false })
+  @ViewChild("dialog", { static: false })
   dialog!: ShareDialogComponent;
 
   onShareNav() {
@@ -354,7 +355,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
   updateRemoteCursor(userId: string, pos: { start: number; end: number }) {
     this.remoteCursors[userId] = pos;
-    console.log('Updated remote cursor:', userId, pos);
+    console.log("Updated remote cursor:", userId, pos);
   }
 
   //-----------------------------
