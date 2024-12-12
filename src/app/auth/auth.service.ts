@@ -94,9 +94,9 @@ export class AuthService {
       console.error('Error logging out:', error.message);
       return;
     }
-    this.router.navigate([''], { relativeTo: this.route });
     localStorage.removeItem('userData');
-    this.isAuth = true;
+    this.router.navigate([''], { relativeTo: this.route });
+    this.isAuth = false;
     if (this.loginExpirTimer) {
       clearTimeout(this.loginExpirTimer);
     }

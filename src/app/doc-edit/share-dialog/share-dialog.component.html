@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Shared editing</h2>
+<mat-dialog-content>
+  <p>User ID of your collaborator:</p>
+
+  <mat-form-field>
+    <mat-label>User ID</mat-label>
+    <input
+      matInput
+      minlength="36"
+      required
+      [(ngModel)]="userId"
+      #userIdInput="ngModel"
+    />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button
+    mat-button
+    cdkFocusInitial
+    (click)="onShareChild()"
+    [disabled]="!userIdInput.valid"
+  >
+    Share
+  </button>
+</mat-dialog-actions>

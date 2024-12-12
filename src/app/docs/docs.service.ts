@@ -8,6 +8,7 @@ import { ApiService } from '../api.service';
 })
 export class DocsService {
   docsChanged = new Subject<Doc[]>();
+  docChanged = new Subject<Doc>();
   editMode = false;
 
   private docs: Doc[] = [];
@@ -17,7 +18,6 @@ export class DocsService {
     this.docsChanged.next(this.docs.slice());
   }
 
-  // to access recipes copy from outside
   getDocs() {
     return this.docs.slice(); // copying an array
   }

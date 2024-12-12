@@ -5,13 +5,24 @@
   />
   <span class="name" style="cursor: default">CollabSphere</span>
   <span class="example-spacer"></span>
-  <button mat-button class="share-btn"><mat-icon>share</mat-icon> Share</button>
+  <button
+    *ngIf="this.realtimeService.sharingMode === false; else sharingMode"
+    mat-button
+    class="share-btn"
+    (click)="onShare()"
+  >
+    <mat-icon>share</mat-icon> Share
+  </button>
+  <ng-template #sharingMode
+    ><button mat-button class="share-btn" (click)="onUnshare()">
+      <mat-icon>share</mat-icon> Stop Sharing
+    </button></ng-template
+  >
   <button mat-flat-button type="submit" (click)="onSaveBtn()">Save</button>
   <button
     mat-icon-button
     type="button"
     class="example-icon"
-    aria-label="Example icon-button with share icon"
     (click)="goToDocs()"
   >
     <mat-icon>home</mat-icon>

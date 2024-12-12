@@ -1,27 +1,15 @@
-import {
-  EventEmitter,
-  Injectable,
-  NgZone,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Doc } from './doc.model';
 import { createClient } from '@supabase/supabase-js';
 import { DocsService } from './docs/docs.service';
-import { DocCardComponent } from './docs/doc-card/doc-card.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { UUID } from 'crypto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
   supabase: any;
-  constructor(
-    private ngZone: NgZone,
-    private docsService: DocsService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {
+  constructor(private ngZone: NgZone, private docsService: DocsService) {
     this.ngZone.runOutsideAngular(() => {
       this.supabase = createClient(
         'https://xbjxhogwjbyxwfvvfuit.supabase.co',
@@ -30,7 +18,7 @@ export class ApiService {
     });
   }
 
-  private userId: string | null = null;
+  public userId: string = '';
 
   async getUserId() {
     try {
@@ -38,14 +26,11 @@ export class ApiService {
         data: { user },
       } = await this.supabase.auth.getUser();
 
-      if (user) {
-        this.userId = user.id;
-        return user.id;
-      }
-      return null;
+      this.userId = user.id;
+      return this.userId;
     } catch (error) {
       console.error('Unexpected error in postDoc:', error);
-      return null;
+      return '';
     }
   }
 
@@ -86,7 +71,7 @@ export class ApiService {
     try {
       const { data, error } = await this.supabase
         .from('docs')
-        .select('id, title, edittime, content')
+        .select('*')
         .eq('user_id', userId);
 
       if (error) {
@@ -98,6 +83,25 @@ export class ApiService {
       }
     } catch (error) {
       console.error('Unexpected error in fetchDocs:', error);
+    }
+  }
+
+  async fetchDoc(doctId: number) {
+    try {
+      const { data, error } = await this.supabase
+        .from('docs')
+        .select('*')
+        .eq('id', doctId);
+
+      if (error) {
+        console.error('Error fetching document:', error.message);
+        return;
+      }
+      if (data) {
+        this.docsService.setDocs(data);
+      }
+    } catch (error) {
+      console.error('Unexpected error in fetchDoc:', error);
     }
   }
 
@@ -150,6 +154,7 @@ export class ApiService {
         title: title,
         edittime: edittime,
         content: content,
+        shared_users: null,
       };
       console.log('Doc to be updated:', newDoc);
 
