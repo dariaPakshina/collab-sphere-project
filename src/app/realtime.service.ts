@@ -36,6 +36,8 @@ export class RealtimeService {
 
   private _snackBar = inject(MatSnackBar);
 
+  public cursors: any[] = [];
+
   async determineRole() {
     const currentUserId = await this.apiService.getUserId();
     if (currentUserId === this.userIDHost) {
@@ -74,14 +76,16 @@ export class RealtimeService {
     });
 
     this.channel!.on('broadcast', { event: 'cursor-pos' }, (payload) => {
-      console.log('Received broadcast:', payload);
+      console.log('Received broadcast:', payload, payload['payload'].userId);
 
-      if (
-        payload['userId'] ===
-        (this.userRole === 'host' ? this.userIDHost : this.userIDShared)
-      ) {
+      const isOwnCursor =
+        payload['payload'].userId ===
+        (this.userRole === 'host' ? this.userIDHost : this.userIDShared);
+
+      if (isOwnCursor) {
         return;
       }
+
       this.cursorPosSubject.next(payload);
     })
       .on('broadcast', { event: 'user-joined' }, (payload: any) => {

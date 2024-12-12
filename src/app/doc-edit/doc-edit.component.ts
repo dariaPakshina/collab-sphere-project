@@ -17,7 +17,7 @@ import { Doc } from '../doc.model';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DocsService } from '../docs/docs.service';
 import { Subscription } from 'rxjs';
-import { NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
 import { DocCardComponent } from '../docs/doc-card/doc-card.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -39,6 +39,8 @@ import { SharedNavDocEditComponent } from './shared-nav-doc-edit/shared-nav-doc-
     MatProgressSpinnerModule,
     ShareDialogComponent,
     SharedNavDocEditComponent,
+    NgFor,
+    NgClass,
   ],
   templateUrl: './doc-edit.component.html',
   styleUrls: ['./doc-edit.component.scss', './media-queries.scss'],
@@ -340,7 +342,78 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   // ---------------------------------
 
   getCursorPosition(textarea: HTMLTextAreaElement) {
-    return { start: textarea.selectionStart, end: textarea.selectionEnd };
+    let start = textarea.selectionStart;
+    let end = textarea.selectionEnd;
+
+    const coordinates = this.getCursorUI(start, end, textarea);
+
+    this.realtimeService.cursors = [coordinates];
+
+    return { start, end };
+  }
+
+  getCursorUI(start: any, end: any, textarea: HTMLTextAreaElement) {
+    const startCoordinates = this.calcCoords(textarea, start);
+    const endCoordinates = this.calcCoords(textarea, end);
+
+    if (start === end) {
+      return {
+        top: startCoordinates.top,
+        left: startCoordinates.left,
+        width: 2,
+        height: parseInt(window.getComputedStyle(textarea).lineHeight || '15'),
+        isCursor: true,
+      };
+    } else {
+      const lineHeight = parseInt(
+        window.getComputedStyle(textarea).lineHeight || '15'
+      );
+      return {
+        top: startCoordinates.top,
+        left: startCoordinates.left,
+        width: (endCoordinates.left = startCoordinates.left),
+        height: lineHeight,
+        isCursor: false,
+      };
+    }
+  }
+
+  calcCoords(textarea: HTMLTextAreaElement, position: number) {
+    const text = textarea.value.substring(0, position);
+
+    const div = document.createElement('div');
+    const computedStyle = window.getComputedStyle(textarea);
+
+    div.style.position = 'absolute';
+    div.style.whiteSpace = 'pre-wrap';
+    div.style.visibility = 'hidden';
+
+    div.style.fontSize = computedStyle.fontSize;
+    div.style.fontFamily = computedStyle.fontFamily;
+    div.style.lineHeight = computedStyle.lineHeight;
+    div.style.padding = computedStyle.padding;
+    div.style.border = computedStyle.border;
+    div.style.boxSizing = computedStyle.boxSizing;
+    div.style.width = `${textarea.offsetWidth}px`;
+    div.style.overflow = 'hidden';
+
+    div.textContent = text.replace(/\n$/, '\n ');
+
+    document.body.appendChild(div);
+
+    const span = document.createElement('span');
+    span.textContent = '|';
+    div.appendChild(span);
+
+    const { offsetLeft, offsetTop } = span;
+    const { scrollTop, scrollLeft } = textarea;
+
+    document.body.removeChild(div);
+
+    return {
+      top: offsetTop - scrollTop,
+      left: offsetLeft - scrollLeft,
+    };
   }
 
   onKeyUp(event: KeyboardEvent, textarea: HTMLTextAreaElement) {
@@ -353,9 +426,15 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updateRemoteCursor(userId: string, pos: { start: number; end: number }) {
-    this.remoteCursors[userId] = pos;
-    console.log('Updated remote cursor:', userId, pos);
-  }
+    const isCounterpart =
+      userId !==
+      (this.realtimeService.userRole === 'host'
+        ? this.realtimeService.userIDHost
+        : this.realtimeService.userIDShared);
 
-  //-----------------------------
+    if (isCounterpart) {
+      this.remoteCursors[userId] = pos;
+      console.log('Updated remote cursor:', userId, pos);
+    }
+  }
 }

@@ -24,11 +24,14 @@ mat-form-field {
 
 .textarea {
   height: 100% !important;
+  position: relative;
 }
 
 textarea {
   resize: none;
   height: 100% !important;
+  position: relative;
+  z-index: 1;
 }
 
 textarea.mdc-text-field__input {
@@ -69,4 +72,33 @@ textarea.mdc-text-field__input[_ngcontent-ng-c721102871] {
   position: absolute;
   top: 50%;
   right: 50%;
+}
+
+//-----------------------------------------------
+
+.cursor-overlay {
+  position: absolute;
+  top: 10px; //textarea padding
+  left: 10px;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.selection-highlight {
+  position: absolute;
+  background-color: rgba(122, 122, 255, 0.529);
+}
+
+.selection-highlight.cursor {
+  width: 2px;
+  background-color: rgb(122, 122, 255);
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
 }

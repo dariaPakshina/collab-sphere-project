@@ -97,6 +97,17 @@
         (keyup)="onKeyUp($event, textarea)"
         (input)="onTextChange($event)"
       ></textarea>
+      <div class="cursor-overlay">
+        <div
+          class="selection-highlight"
+          *ngFor="let cursor of realtimeService.cursors"
+          [style.top.px]="cursor.top"
+          [style.left.px]="cursor.left"
+          [style.width.px]="cursor.width"
+          [style.height.px]="cursor.height"
+          [ngClass]="{ cursor: cursor.isCursor }"
+        ></div>
+      </div>
     </mat-form-field>
   </div>
 </form>
