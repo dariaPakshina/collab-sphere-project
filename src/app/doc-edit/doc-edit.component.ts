@@ -24,6 +24,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RealtimeService } from '../realtime.service';
 import { ShareDialogComponent } from './share-dialog/share-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { SharedNavDocEditComponent } from './shared-nav-doc-edit/shared-nav-doc-edit.component';
 
 @Component({
   selector: 'app-doc-edit',
@@ -37,6 +38,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
     MatButtonModule,
     MatProgressSpinnerModule,
     ShareDialogComponent,
+    SharedNavDocEditComponent,
   ],
   templateUrl: './doc-edit.component.html',
   styleUrls: ['./doc-edit.component.scss', './media-queries.scss'],
@@ -52,6 +54,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   subscription!: Subscription;
   saved = false;
   loading = true;
+  sharedUser = false;
   remoteText = '';
 
   @Input() id!: number;
@@ -63,7 +66,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private docsService: DocsService,
     private cdr: ChangeDetectorRef,
-    private realtimeService: RealtimeService
+    public realtimeService: RealtimeService
   ) {}
 
   @ViewChild('textarea', { static: false })
@@ -101,17 +104,23 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.realtimeService.textarea = this.textarea;
     this.realtimeService.docID = this.id;
     const userId = await this.apiService.getUserId();
+    this.realtimeService.clearSharedUsers(this.id, userId);
 
     if (!this.realtimeService.sharingMode) {
       const isShared = await this.checkIfShared(this.id, userId);
       if (isShared) {
         this.realtimeService.sharingMode = true;
         await this.realtimeService.initSharedAccount(this.id, userId);
+
+        this.sharedUser = true;
+        this.realtimeService.sharedUser = true;
       } else {
         console.log('Edit mode: host or non-shared document.');
       }
     } else {
       await this.realtimeService.initSharedAccount(this.id, userId);
+      this.sharedUser = true;
+      this.realtimeService.sharedUser = true;
     }
 
     this.realtimeService.cursorPos$.subscribe((payload) => {
@@ -128,6 +137,30 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.realtimeService.content$.subscribe((content) => {
       this.remoteText = content;
       console.log('Updated textarea content:', content);
+    });
+  }
+
+  initForm() {
+    let docTitle = '';
+    if (this.editMode && this.id) {
+      this.apiService.fetchDoc(this.id);
+      const doc = this.docsService.getDoc(this.id);
+      this.docsService.editMode = true;
+
+      if (doc) {
+        docTitle = doc.title;
+        this.remoteText = doc.content;
+        this.realtimeService.setInitialContent(this.remoteText);
+      } else {
+        this.saved = true;
+        this.router.navigate(['./page-not-found'], { relativeTo: this.route });
+        console.error(`Document with ID ${this.id} not found.`);
+      }
+    }
+
+    this.addForm.patchValue({
+      title: docTitle,
+      content: this.remoteText,
     });
   }
 
@@ -168,33 +201,9 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     try {
       await this.apiService.fetchDoc(this.id);
     } catch (error) {
+      this.router.navigate(['./page-not-found'], { relativeTo: this.route });
       console.error('Error loading docs:', error);
     }
-  }
-
-  initForm() {
-    let docTitle = '';
-    let docContent = '';
-    if (this.editMode && this.id) {
-      this.apiService.fetchDoc(this.id);
-      const doc = this.docsService.getDoc(this.id);
-      this.docsService.editMode = true;
-
-      if (doc) {
-        docTitle = doc.title;
-        docContent = doc.content;
-        this.remoteText = doc.content;
-      } else {
-        this.saved = true;
-        this.router.navigate(['./page-not-found'], { relativeTo: this.route });
-        console.error(`Document with ID ${this.id} not found.`);
-      }
-    }
-
-    this.addForm.patchValue({
-      title: docTitle,
-      content: docContent,
-    });
   }
 
   updateButtonStates() {
@@ -347,4 +356,6 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.remoteCursors[userId] = pos;
     console.log('Updated remote cursor:', userId, pos);
   }
+
+  //-----------------------------
 }

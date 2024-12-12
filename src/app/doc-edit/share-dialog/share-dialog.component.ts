@@ -1,5 +1,5 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { FormsModule, NgModel } from '@angular/forms';
+import { Component, EventEmitter, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MatDialog,
@@ -11,6 +11,9 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RealtimeService } from '../../realtime.service';
+import { NgIf } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-share-dialog',
@@ -42,7 +45,9 @@ export class ShareDialogComponent {
     MatDialogTitle,
     FormsModule,
     MatDialogContent,
+    MatIcon,
     MatDialogActions,
+    NgIf,
   ],
   styleUrl: './share-dialog.component.scss',
 })
@@ -50,17 +55,30 @@ export class DialogOverviewExampleDialog {
   readonly dialogRef = inject(MatDialogRef<DialogOverviewExampleDialog>);
   realtimeService = inject(RealtimeService);
 
+  constructor(private clipboard: Clipboard) {}
+
   onNoClick(): void {
     this.dialogRef.close();
   }
 
   userId = '';
+  exactLengthPattern = '^.{36}$';
+  currentURL = window.location.href;
 
-  // @Output() dialogShareClick = new EventEmitter<void>();
   onShareChild() {
     console.log('share btn clicked', this.userId);
     this.realtimeService.onDialogShare(this.userId);
-    // this.dialogShareClick.emit();
     this.dialogRef.close();
+  }
+
+  copiedID = false;
+
+  copy(url: string) {
+    this.clipboard.copy(url);
+
+    this.copiedID = true;
+    setTimeout(() => {
+      this.copiedID = false;
+    }, 3000);
   }
 }

@@ -125,6 +125,15 @@ export class AuthService {
     }, 172800000);
   }
 
+  async fetchUserName(): Promise<string> {
+    const { data, error } = await this.supabase.auth.getUserIdentities();
+    if (error) {
+      console.error('Unable to fetch Username', error);
+      return '';
+    }
+    return data.identities[0].identity_data.name || 'Uknown user';
+  }
+
   authStateChanges() {
     const { data } = this.supabase.auth.onAuthStateChange(
       (event: any, session: any) => {

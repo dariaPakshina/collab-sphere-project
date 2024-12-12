@@ -7,12 +7,43 @@
     <input
       matInput
       minlength="36"
+      maxlength="36"
       required
       [(ngModel)]="userId"
       #userIdInput="ngModel"
+      [pattern]="exactLengthPattern"
+    />
+    <mat-error *ngIf="userIdInput.errors?.['required']"
+      >User ID is required.</mat-error
+    >
+    <mat-error *ngIf="userIdInput.errors?.['pattern']">
+      User ID must be exactly 36 characters.
+    </mat-error>
+  </mat-form-field>
+
+  <p style="margin-top: 2rem">Send them this link:</p>
+
+  <mat-form-field>
+    <mat-label>URL</mat-label>
+    <input
+      matInput
+      readonly
+      [(ngModel)]="currentURL"
+      [ngModelOptions]="{ standalone: true }"
     />
   </mat-form-field>
+  <mat-icon
+    *ngIf="copiedID === false; else copied"
+    style="cursor: pointer; margin-left: 0.7rem"
+    (click)="copy(currentURL)"
+    >file_copy</mat-icon
+  >
+
+  <ng-template #copied>
+    <mat-icon style="cursor: pointer; margin-left: 0.7rem">check</mat-icon>
+  </ng-template>
 </mat-dialog-content>
+
 <mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
   <button

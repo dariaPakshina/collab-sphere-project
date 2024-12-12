@@ -1,0 +1,29 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar {
+  margin-bottom: 2rem;
+  background-color: #dbe4ff;
+  font-weight: 400;
+  font-family: "Quicksand", sans-serif;
+}
+
+.example-icon {
+  margin-left: 1rem;
+}
+img {
+  height: 2rem;
+  width: 2rem;
+}
+
+@media (max-width: 500px) {
+  .name {
+    display: none;
+  }
+
+  mat-toolbar {
+    justify-content: left;
+    margin-bottom: 1rem;
+  }
+}
