@@ -23,7 +23,6 @@ import { AuthService } from './auth/auth.service';
     DocsComponent,
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
   authService = inject(AuthService);

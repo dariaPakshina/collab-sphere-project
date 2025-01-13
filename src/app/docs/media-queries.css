@@ -1,22 +1,16 @@
-@mixin grid-template-cols($num) {
-  grid-template-columns: repeat($num, 1fr);
-}
-
 @media (max-width: 1350px) {
   .container {
-    @include grid-template-cols(4);
+    grid-template-columns: repeat(4, 1fr);
   }
 }
-
 @media (max-width: 1070px) {
   .container {
-    @include grid-template-cols(3);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
-
 @media (max-width: 810px) {
   .container {
-    @include grid-template-cols(2);
+    grid-template-columns: repeat(2, 1fr);
     column-gap: 1rem;
     row-gap: 2rem;
   }
@@ -24,11 +18,12 @@
     margin: 2rem 5rem 0 5rem !important;
   }
 }
-
 @media (max-width: 420px) {
   .container {
-    @include grid-template-cols(2);
+    grid-template-columns: repeat(2, 1fr);
     column-gap: 0.5rem;
     row-gap: 1rem;
   }
 }
+
+/*# sourceMappingURL=media-queries.css.map */

@@ -13,9 +13,9 @@ a:visited {
   font-size: 1.2rem;
   justify-content: center;
   align-items: center;
-}
 
-a:hover,
-a:active {
-  color: #6b72ff;
+  &:hover,
+  &:active {
+    color: #6b72ff;
+  }
 }

@@ -12,12 +12,9 @@ $theme: mat.define-theme(
 
 html {
   @include mat.all-component-themes($theme);
-}
-
-html,
-body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;

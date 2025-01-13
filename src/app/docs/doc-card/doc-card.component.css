@@ -4,15 +4,15 @@
   cursor: pointer;
   transition: all 0.2s;
   height: 10rem;
-
-  &:hover,
-  &:active {
-    background-color: rgb(243, 243, 255);
-  }
-
-  &:hover .mat-icon-close {
-    opacity: 100%;
-  }
+}
+.doc-card:hover, .doc-card:active,
+.doc-card:visited:hover,
+.doc-card:visited:active {
+  background-color: rgb(243, 243, 255);
+}
+.doc-card:hover .mat-icon-close,
+.doc-card:visited:hover .mat-icon-close {
+  opacity: 100%;
 }
 
 mat-card-title {
@@ -38,11 +38,9 @@ mat-card-subtitle {
 .mat-icon-close {
   opacity: 0;
   transition: all 0.1s;
-
-  &:hover,
-  &:visited {
-    color: rgb(213, 58, 58);
-  }
+}
+.mat-icon-close:hover, .mat-icon-close:visited {
+  color: rgb(213, 58, 58);
 }
 
 mat-checkbox {
@@ -63,58 +61,47 @@ app-delete-window {
   right: 50%;
 }
 
-//=====================================================
-
-@mixin size-width($s, $w) {
-  font-size: $s;
-  width: $w;
-}
-
-@mixin height-width($h, $w) {
-  height: $h;
-  width: $w;
-}
-
 @media (max-width: 520px) {
   mat-card-title {
-    @include size-width(110%, 10rem);
+    font-size: 110%;
+    width: 10rem;
   }
-
   mat-card-subtitle,
   mat-card-content {
-    @include size-width(80%, 10rem);
+    font-size: 80%;
+    width: 10rem;
   }
 }
-
 mat-card-header {
-  @include height-width(4rem !important, 10rem);
+  height: 4rem !important;
+  width: 10rem;
   padding: 12px 12px 0;
 }
 
 .doc-card {
-  @include height-width(7rem, 12rem);
+  height: 7rem;
+  width: 12rem;
 }
 
 @media (max-width: 410px) {
   mat-card-title {
-    @include size-width(110%, 8rem);
+    font-size: 110%;
+    width: 8rem;
   }
-
   mat-card-subtitle,
   mat-card-content {
-    @include size-width(80%, 8rem);
+    font-size: 80%;
+    width: 8rem;
   }
-
   mat-card-header {
-    @include height-width(4rem !important, 8rem);
+    height: 4rem !important;
+    width: 8rem;
     padding: 10px 10px 0;
   }
-
   .doc-card {
-    @include height-width(7rem, 10rem);
+    height: 7rem;
+    width: 10rem;
   }
 }
 
-// .btn-delete {
-//   color: rgb(194, 93, 93) !important;
-// }
+/*# sourceMappingURL=doc-card.component.css.map */

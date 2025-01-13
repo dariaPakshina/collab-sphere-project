@@ -1,5 +1,10 @@
 @use "@angular/material" as mat;
 
+@mixin img-size($h, $w) {
+  height: $h;
+  width: $w;
+}
+
 .example-spacer {
   flex: 1 1 auto;
 }
@@ -12,13 +17,11 @@ mat-toolbar {
 }
 
 img {
-  height: 2rem;
-  width: 2rem;
+  @include img-size(2rem, 2rem);
 }
 
 .logout-icon {
-  height: 1.5rem;
-  width: 1.5rem;
+  @include img-size(1.5rem, 1.5rem);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -77,9 +80,8 @@ img {
 
   .light-btns {
     margin-left: 0;
-  }
-
-  .light-btn {
-    margin-right: 0.2rem;
+    .light-btn {
+      margin-right: 0.2rem;
+    }
   }
 }
