@@ -54,7 +54,7 @@ export class ApiService {
         console.error('Detailed error:', error);
         return;
       }
-      console.log('Document inserted successfully:', data);
+      console.log('Document inserted successfully:', docData);
     } catch (error) {
       console.error('Unexpected error in postDoc:', error);
     }

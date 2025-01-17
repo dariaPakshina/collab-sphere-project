@@ -13,8 +13,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { User } from './user.model';
-import { AuthResponseData, AuthService } from './auth.service';
-import { merge, Observable } from 'rxjs';
+import { AuthService } from './auth.service';
+import { merge } from 'rxjs';
 import { NgIf } from '@angular/common';
 
 @Component({

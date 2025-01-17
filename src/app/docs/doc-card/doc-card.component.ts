@@ -1,27 +1,19 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
-  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
-  Output,
   ViewChild,
 } from '@angular/core';
-import { MatCheckbox, MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { Doc } from '../../doc.model';
 import { NgIf, SlicePipe } from '@angular/common';
 import { MatGridListModule } from '@angular/material/grid-list';
-import {
-  ActivatedRoute,
-  Router,
-  RouterLink,
-  RouterLinkActive,
-} from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ApiService } from '../../api.service';
 import {
   DeleteWindowComponent,
@@ -57,8 +49,6 @@ export class DocCardComponent implements AfterViewInit, OnInit, OnDestroy {
 
   constructor(
     private apiService: ApiService,
-    private route: ActivatedRoute,
-    private router: Router,
     public docsService: DocsService
   ) {}
 

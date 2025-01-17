@@ -1,8 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from '../api.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterModule,
+  RouterOutlet,
+} from '@angular/router';
 import { BehaviorSubject, throwError } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
 
 export class AuthResponseData {
   data: object;

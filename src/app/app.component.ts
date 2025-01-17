@@ -27,7 +27,6 @@ import { AuthService } from './auth/auth.service';
 export class AppComponent implements OnInit {
   authService = inject(AuthService);
   title = 'CollabSphere';
-
   ngOnInit(): void {
     this.authService.autoLogIn();
   }

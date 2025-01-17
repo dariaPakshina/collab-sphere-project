@@ -1,10 +1,6 @@
 import { Routes } from '@angular/router';
-import { DocEditComponent } from './doc-edit/doc-edit.component';
-import { DocsComponent } from './docs/docs.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { deactivateGuard } from './doc-edit/can-deactivate.guard';
 import { StarterPageComponent } from './starter-page/starter-page.component';
-import { AuthComponent } from './auth/auth.component';
 import { authGuard } from './auth.guard';
 
 export const routes: Routes = [

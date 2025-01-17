@@ -80,8 +80,8 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async ngOnInit() {
     this.addForm = new FormGroup({
-      title: new FormControl(null),
-      content: new FormControl(null),
+      title: new FormControl(""),
+      content: new FormControl(""),
     });
 
     this.route.params.subscribe((params: Params) => {
@@ -135,13 +135,17 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.realtimeService.content$.subscribe((content) => {
-      this.remoteText = content;
-      console.log("Updated textarea content:", content);
+      if (this.editMode && this.id) {
+        this.remoteText = content;
+        console.log("Updated textarea content:", content);
+      }
     });
   }
 
   initForm() {
     let docTitle = "";
+    let docContent = "";
+
     if (this.editMode && this.id) {
       this.apiService.fetchDoc(this.id);
       const doc = this.docsService.getDoc(this.id);
@@ -149,25 +153,32 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
       if (doc) {
         docTitle = doc.title;
+        docContent = doc.content;
         this.remoteText = doc.content;
+
         this.realtimeService.setInitialContent(this.remoteText);
       } else {
         this.saved = true;
         this.router.navigate(["./page-not-found"], { relativeTo: this.route });
         console.error(`Document with ID ${this.id} not found.`);
       }
+    } else {
+      this.remoteText = "";
     }
 
     this.addForm.patchValue({
       title: docTitle,
       content: this.remoteText,
     });
+
+    this.loading = false;
   }
 
   // ---------------------------------
 
   onTextChange(event: Event) {
     const newContent = this.textarea!.nativeElement.value;
+    this.remoteText = newContent;
     this.realtimeService.sendTextUpdate(newContent);
   }
 
@@ -188,7 +199,6 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log("shared user found, allow subscription");
         return data.shared_users.includes(userId);
       }
-
       console.warn("shared_users field is not an array or is missing.");
       return false;
     } catch (err) {
@@ -227,7 +237,9 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    console.log(this.remoteText);
+  }
 
   canDeactivate(): boolean {
     if (this.saved === false) {
@@ -291,7 +303,11 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
       this.addForm.patchValue({
         content: this.remoteText,
       });
-      const docData = this.addForm.value;
+
+      const docData = {
+        title: this.addForm.value.title as string,
+        content: this.remoteText,
+      };
 
       if (this.editMode && this.id) {
         console.log("Editing document:", docData);
@@ -303,7 +319,7 @@ export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  onSave(id: number | null, docData: Doc) {
+  onSave(id: number | null, docData: { title: string; content: string }) {
     const editTime = new Date().toString();
     this.loading = true;
     this.saved = true;

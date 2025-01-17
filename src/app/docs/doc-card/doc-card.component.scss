@@ -1,6 +1,6 @@
 .doc-card,
 .doc-card:visited {
-  max-width: 250px;
+  max-width: 250px !important;
   cursor: pointer;
   transition: all 0.2s;
   height: 10rem;
@@ -84,15 +84,14 @@ app-delete-window {
   mat-card-content {
     @include size-width(80%, 10rem);
   }
-}
+  mat-card-header {
+    @include height-width(4rem !important, 10rem);
+    padding: 12px 12px 0;
+  }
 
-mat-card-header {
-  @include height-width(4rem !important, 10rem);
-  padding: 12px 12px 0;
-}
-
-.doc-card {
-  @include height-width(7rem, 12rem);
+  .doc-card {
+    @include height-width(7rem, 12rem);
+  }
 }
 
 @media (max-width: 410px) {
