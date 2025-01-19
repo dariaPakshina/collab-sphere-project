@@ -10,7 +10,7 @@ import { BehaviorSubject, throwError } from 'rxjs';
 
 export class AuthResponseData {
   data: object;
-  session: object; // Adjust the type if you know the exact structure
+  session: object;
 
   constructor(data: object, session: object) {
     this.data = data;

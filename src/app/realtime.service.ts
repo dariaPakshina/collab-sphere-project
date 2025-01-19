@@ -28,7 +28,7 @@ export class RealtimeService {
   docID!: number;
   sharingMode = false;
 
-  private channel: RealtimeChannel | null = null;
+  channel: RealtimeChannel | null = null;
 
   textarea!: any;
   contentSubject = new BehaviorSubject<string>('');
