@@ -30,7 +30,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
   styleUrls: ['./docs.component.scss', './media-queries.scss'],
 })
 export class DocsComponent implements OnInit, OnDestroy {
-  docs?: Doc[];
+  docs!: Doc[];
   subscription!: Subscription;
   loading = false;
 
