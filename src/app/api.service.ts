@@ -2,7 +2,6 @@ import { Injectable, NgZone } from '@angular/core';
 import { Doc } from './doc.model';
 import { createClient } from '@supabase/supabase-js';
 import { DocsService } from './docs/docs.service';
-import { UUID } from 'crypto';
 
 @Injectable({
   providedIn: 'root',
@@ -125,13 +124,12 @@ export class ApiService {
       const {} = await this.supabase.from('docs').delete().eq('id', this.index);
       window.location.reload();
     } catch (error) {
-      console.error('Unexpected error in fetchDocs:', error);
+      console.error('Unexpected error in deleteDoc:', error);
     }
   }
 
   async deleteDocs() {
     try {
-      console.log(this.indices);
       if (this.indices.length > 0) {
         this.docsService.deleteDocs(this.indices);
         const {} = await this.supabase
@@ -141,7 +139,7 @@ export class ApiService {
         window.location.reload();
       }
     } catch (error) {
-      console.error('Unexpected error in fetchDocs:', error);
+      console.error('Unexpected error in deleteDocs:', error);
     }
   }
 

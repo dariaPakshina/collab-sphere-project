@@ -4,7 +4,6 @@ import { BehaviorSubject } from 'rxjs';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from './auth/auth.service';
-import { Doc } from './doc.model';
 
 @Injectable({
   providedIn: 'root',

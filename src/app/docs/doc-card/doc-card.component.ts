@@ -42,7 +42,7 @@ import { Subscription } from 'rxjs';
   styleUrl: './doc-card.component.scss',
 })
 export class DocCardComponent implements AfterViewInit, OnInit, OnDestroy {
-  @Input() doc?: Doc;
+  @Input() doc!: Doc;
   @Input() index!: number;
 
   private subscription!: Subscription;

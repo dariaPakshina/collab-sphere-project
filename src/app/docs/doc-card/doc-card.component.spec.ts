@@ -14,6 +14,13 @@ describe('DocCardComponent', () => {
 
     fixture = TestBed.createComponent(DocCardComponent);
     component = fixture.componentInstance;
+    component.doc = {
+      id: 1,
+      title: 'Test Doc',
+      content: 'Sample content',
+      edittime: '2024-01-21',
+      shared_users: null,
+    };
     fixture.detectChanges();
   });
 

@@ -1,12 +1,12 @@
 <mat-card
-  [routerLink]="doc?.id ? ['/doc-edit', doc?.id] : ['./page-not-found']"
+  [routerLink]="doc.id ? ['/doc-edit', doc.id] : ['./page-not-found']"
   class="doc-card"
   appearance="outlined"
-  [id]="doc?.id"
+  [id]="doc.id"
   (click)="onSendIDCard($event)"
 >
   <mat-card-header>
-    <mat-card-title *ngIf="doc!.title.length > 20; else changeTitleLength"
+    <mat-card-title *ngIf="doc.title.length > 20; else changeTitleLength"
       >{{ doc!.title | slice : 0 : 20 }}...
 
       <mat-icon
@@ -37,14 +37,14 @@
         ></ng-template> </mat-card-title
     ></ng-template>
 
-    <mat-card-subtitle>{{ doc?.edittime | slice : 4 : 15 }}</mat-card-subtitle>
+    <mat-card-subtitle>{{ doc.edittime | slice : 4 : 15 }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content *ngIf="doc!.content.length > 45; else elseBlock2">
-    <p>{{ doc?.content | slice : 0 : 45 }}...</p>
+    <p>{{ doc.content | slice : 0 : 45 }}...</p>
   </mat-card-content>
   <ng-template #elseBlock2
     ><mat-card-content>
-      <p>{{ doc?.content }}</p>
+      <p>{{ doc.content }}</p>
     </mat-card-content></ng-template
   >
 </mat-card>

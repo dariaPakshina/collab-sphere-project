@@ -11,6 +11,9 @@ export class DocsService {
   docChanged = new Subject<Doc>();
   editMode = false;
 
+  docsChanged$ = this.docsChanged.asObservable();
+  docChanged$ = this.docChanged.asObservable();
+
   private docs: Doc[] = [];
 
   setDocs(data: Doc[]) {
@@ -45,7 +48,6 @@ export class DocsService {
   selectMode = false;
 
   deleteAction = new Subject<void>();
-
   deleteAction$ = this.deleteAction.asObservable();
 
   triggerDelete() {
