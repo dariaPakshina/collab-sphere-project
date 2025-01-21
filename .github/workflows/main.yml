@@ -25,4 +25,4 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: ng test -- --no-watch --no-progress --browsers=ChromeHeadless
+        run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
