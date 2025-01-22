@@ -51,14 +51,15 @@ export class AuthService {
     this.errorMessage = 'An unknown error occurred!';
     if ((errorRes.status = 422)) {
       this.errorMessage = 'User with this email already exists';
-    } else if ((errorRes.status = 400)) {
+    }
+    if ((errorRes.status = 400)) {
       this.errorMessage = 'Wrong email or password';
-    } else if ((errorRes.status = 500)) {
+    }
+    if ((errorRes.status = 500)) {
       this.errorMessage = 'Something went wrong. Try again later.';
-    } else if ((errorRes.status = 429)) {
+    }
+    if ((errorRes.status = 429)) {
       this.errorMessage = 'Too many requests. Try again later.';
-    } else {
-      this.errorMessage = 'An unknown error occurred!';
     }
 
     return throwError(() => new Error(this.errorMessage));
