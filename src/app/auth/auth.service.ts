@@ -48,18 +48,17 @@ export class AuthService {
   handleErrors(errorRes: any) {
     this.errorMode = true;
     console.log({ ...errorRes });
-    this.errorMessage = 'An unknown error occurred. Try again later.';
+    this.errorMessage = 'An unknown error occurred!';
     if ((errorRes.status = 422)) {
       this.errorMessage = 'User with this email already exists';
-    }
-    if ((errorRes.status = 400)) {
+    } else if ((errorRes.status = 400)) {
       this.errorMessage = 'Wrong email or password';
-    }
-    if ((errorRes.status = 500)) {
+    } else if ((errorRes.status = 500)) {
       this.errorMessage = 'Something went wrong. Try again later.';
-    }
-    if ((errorRes.status = 429)) {
+    } else if ((errorRes.status = 429)) {
       this.errorMessage = 'Too many requests. Try again later.';
+    } else {
+      this.errorMessage = 'An unknown error occurred!';
     }
 
     return throwError(() => new Error(this.errorMessage));
