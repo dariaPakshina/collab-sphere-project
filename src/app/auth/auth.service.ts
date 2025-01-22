@@ -48,7 +48,7 @@ export class AuthService {
   handleErrors(errorRes: any) {
     this.errorMode = true;
     console.log({ ...errorRes });
-    this.errorMessage = 'An unknown error occurred!';
+    this.errorMessage = 'An unknown error occurred. Try again later.';
     if ((errorRes.status = 422)) {
       this.errorMessage = 'User with this email already exists';
     }
