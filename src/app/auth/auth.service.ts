@@ -75,7 +75,8 @@ export class AuthService {
     }
     console.log('User signed up successfully:', data);
     this.handleAuth(data.data, data.session);
-    this.router.navigate(['../docs'], { relativeTo: this.route });
+    // this.router.navigate(['../docs'], { relativeTo: this.route });
+    this.router.navigate(['/confirm-email'], { relativeTo: this.route });
   }
 
   async signIn() {

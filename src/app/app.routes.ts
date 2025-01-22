@@ -31,6 +31,22 @@ export const routes: Routes = [
       import('./auth/auth.component').then((mod) => mod.AuthComponent),
   },
   {
+    path: 'confirm-email',
+    title: 'CollabSphere',
+    loadComponent: () =>
+      import('./auth/confirm-email/confirm-email.component').then(
+        (mod) => mod.ConfirmEmailComponent
+      ),
+  },
+  {
+    path: 'confirmed',
+    title: 'CollabSphere',
+    loadComponent: () =>
+      import('./auth/confirmed/confirmed.component').then(
+        (mod) => mod.ConfirmedComponent
+      ),
+  },
+  {
     path: 'docs',
     title: 'Documents | CollabSphere',
     loadComponent: () =>
