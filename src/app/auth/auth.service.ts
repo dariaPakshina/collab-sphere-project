@@ -55,6 +55,9 @@ export class AuthService {
     if ((errorRes.status = 400)) {
       this.errorMessage = 'Wrong email or password';
     }
+    if ((errorRes.status = 500)) {
+      this.errorMessage = 'Something went wrong. Try again later.';
+    }
 
     return throwError(() => new Error(this.errorMessage));
   }
