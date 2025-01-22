@@ -58,6 +58,9 @@ export class AuthService {
     if ((errorRes.status = 500)) {
       this.errorMessage = 'Something went wrong. Try again later.';
     }
+    if ((errorRes.status = 429)) {
+      this.errorMessage = 'Too many requests. Try again later.';
+    }
 
     return throwError(() => new Error(this.errorMessage));
   }
