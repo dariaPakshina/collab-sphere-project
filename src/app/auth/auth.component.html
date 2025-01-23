@@ -81,6 +81,28 @@
   </form>
 
   <button
+    *ngIf="this.authService.singingIn && email.invalid; else emailValid"
+    class="switchText"
+    type="button"
+    appDisabled
+  >
+    Forgot your password?
+    <br />
+    (Email field should be filled)
+  </button>
+
+  <ng-template #emailValid>
+    <button
+      *ngIf="this.authService.singingIn"
+      class="switchText"
+      type="button"
+      (click)="passwordReset()"
+    >
+      Forgot your password?
+    </button>
+  </ng-template>
+
+  <button
     *ngIf="!this.authService.singingIn; else signIn"
     class="switchText"
     type="button"
