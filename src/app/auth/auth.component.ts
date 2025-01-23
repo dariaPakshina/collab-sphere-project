@@ -16,6 +16,7 @@ import { User } from './user.model';
 import { AuthService } from './auth.service';
 import { merge } from 'rxjs';
 import { NgIf } from '@angular/common';
+import { DisabledDirective } from './disabled.directive';
 
 @Component({
   selector: 'app-auth',
@@ -29,6 +30,7 @@ import { NgIf } from '@angular/common';
     RouterLink,
     ReactiveFormsModule,
     NgIf,
+    DisabledDirective,
   ],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
@@ -95,6 +97,16 @@ export class AuthComponent implements OnInit {
       this.authService.signUp();
     } else {
       this.authService.signIn();
+    }
+  }
+
+  passwordReset() {
+    this.addForm.valueChanges.subscribe();
+    this.authService.inputEmail = this.email.value!;
+    if (this.authService.inputEmail) {
+      this.authService.passwordReset();
+    } else {
+      console.error('Lacking email to send a link to');
     }
   }
 

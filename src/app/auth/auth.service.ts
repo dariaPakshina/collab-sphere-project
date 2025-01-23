@@ -1,18 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from '../api.service';
-import {
-  ActivatedRoute,
-  Router,
-  RouterModule,
-  RouterOutlet,
-} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, throwError } from 'rxjs';
 
 export class AuthResponseData {
   data: object;
-  session: object;
+  session: any;
 
-  constructor(data: object, session: object) {
+  constructor(data: object, session: any) {
     this.data = data;
     this.session = session;
   }
@@ -30,6 +25,7 @@ export class AuthService {
   errorMode = false;
   errorMessage = '';
   isAuth = false;
+  passwordMode = false;
 
   inputEmail: string = '';
   inputPassword: string = '';
@@ -37,7 +33,7 @@ export class AuthService {
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
-  handleAuth(data: object, session: object) {
+  handleAuth(data: object, session: object | null) {
     const user = new AuthResponseData(data, session);
     this.user.next(user);
     this.autoLogOut();
@@ -47,22 +43,25 @@ export class AuthService {
 
   handleErrors(errorRes: any) {
     this.errorMode = true;
-    console.log({ ...errorRes });
+    console.log({ ...errorRes }.status);
     this.errorMessage = 'An unknown error occurred!';
-    if ((errorRes.status = 422)) {
+    if ({ ...errorRes }.status === 422) {
       this.errorMessage = 'User with this email already exists';
     }
-    if ((errorRes.status = 400)) {
+    if ({ ...errorRes }.status === 400) {
       this.errorMessage = 'Wrong email or password';
     }
-    if ((errorRes.status = 500)) {
+    if ({ ...errorRes }.status === 500) {
       this.errorMessage = 'Something went wrong. Try again later.';
     }
-    if ((errorRes.status = 429)) {
+    if ({ ...errorRes }.status === 429) {
       this.errorMessage = 'Too many requests. Try again later.';
     }
 
-    return throwError(() => new Error(this.errorMessage));
+    return throwError(() => {
+      new Error(this.errorMessage);
+      // this.errorMode = false;
+    });
   }
 
   async signUp() {
@@ -73,6 +72,7 @@ export class AuthService {
         data: {
           name: this.inputName,
         },
+        emailRedirectTo: 'http://localhost:4200/email-confirmed',
       },
     });
     if (error) {
@@ -80,7 +80,7 @@ export class AuthService {
       return;
     }
     console.log('User signed up successfully:', data);
-    this.handleAuth(data.data, data.session);
+    this.handleAuth(data.data, null);
     // this.router.navigate(['../docs'], { relativeTo: this.route });
     this.router.navigate(['/confirm-email'], { relativeTo: this.route });
   }
@@ -93,10 +93,32 @@ export class AuthService {
     if (error) {
       this.handleErrors(error);
       return;
+    } else {
+      console.log('User signed in successfully:', data);
+      this.handleAuth(data.data, data.session);
+      this.router.navigate(['../docs'], { relativeTo: this.route });
     }
-    console.log('User signed in successfully:', data);
-    this.handleAuth(data.data, data.session);
-    this.router.navigate(['../docs'], { relativeTo: this.route });
+  }
+
+  async passwordReset() {
+    this.passwordMode = true;
+    const { data, error } = await this.supabase.auth.resetPasswordForEmail(
+      this.inputEmail,
+      {
+        redirectTo: 'http://localhost:4200/psw-confirmed',
+      }
+    );
+
+    // this.handleAuth(data.data, data.session);
+    this.router.navigate(['/confirm-email'], { relativeTo: this.route });
+
+    if (error) {
+      console.error(error);
+      this.handleErrors(error);
+      return;
+    } else {
+      console.log('Password reset', data);
+    }
   }
 
   async logOut() {

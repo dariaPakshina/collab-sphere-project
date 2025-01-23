@@ -1,0 +1,55 @@
+<mat-toolbar>
+  <img
+    src="https://img.icons8.com/?size=100&id=44053&format=png&color=000000"
+    routerLink="/"
+  />
+  <span class="name" style="cursor: default; margin-bottom: 2rem"
+    >CollabSphere</span
+  >
+</mat-toolbar>
+<div
+  style="
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  "
+>
+  <h4>Set your new password:</h4>
+  <form [formGroup]="addForm" (ngSubmit)="onChangePassword()">
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        [type]="hide() ? 'password' : 'text'"
+        required
+        formControlName="password"
+        (blur)="updateErrorMessagePassword()"
+      />
+      <mat-error *ngIf="errorMessagePassword">
+        {{ errorMessagePassword() }}
+      </mat-error>
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hidePassword($event)"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide()"
+        type="button"
+      >
+        <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+      <mat-hint>Minimum 8 characters</mat-hint>
+    </mat-form-field>
+
+    <button
+      class="signUpBtn"
+      style="margin-left: 1rem"
+      mat-flat-button
+      type="submit"
+      [disabled]="password.invalid"
+    >
+      Save
+    </button>
+  </form>
+</div>
