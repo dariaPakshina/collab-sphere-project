@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EmailConfirmedComponent } from './email-confirmed.component';
+import { provideRouter } from '@angular/router';
 
 describe('EmailConfirmedComponent', () => {
   let component: EmailConfirmedComponent;
@@ -8,9 +9,9 @@ describe('EmailConfirmedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmailConfirmedComponent]
-    })
-    .compileComponents();
+      imports: [EmailConfirmedComponent],
+      providers: [provideRouter([])],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(EmailConfirmedComponent);
     component = fixture.componentInstance;
