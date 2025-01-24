@@ -72,7 +72,9 @@ export class AuthService {
         data: {
           name: this.inputName,
         },
-        emailRedirectTo: 'http://localhost:4200/email-confirmed',
+        // emailRedirectTo: 'http://localhost:4200/email-confirmed',
+        emailRedirectTo:
+          'https://collab-sphere-project.vercel.app/email-confirmed',
       },
     });
     if (error) {
@@ -105,7 +107,8 @@ export class AuthService {
     const { data, error } = await this.supabase.auth.resetPasswordForEmail(
       this.inputEmail,
       {
-        redirectTo: 'http://localhost:4200/psw-confirmed',
+        // redirectTo: 'http://localhost:4200/psw-confirmed',
+        redirectTo: 'https://collab-sphere-project.vercel.app/psw-confirmed',
       }
     );
 
