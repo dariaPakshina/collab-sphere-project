@@ -4,6 +4,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 
+// navigation from non-auth starter page
+
 @Component({
   selector: 'app-starter-page',
   standalone: true,

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Doc } from '../doc.model';
-import { ApiService } from '../api.service';
+
+// managing inner document storage, retreived from supabase
 
 @Injectable({
   providedIn: 'root',

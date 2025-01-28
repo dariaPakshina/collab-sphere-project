@@ -6,6 +6,8 @@ export interface Doc {
   shared_users: string[] | null;
 }
 
+// document model
+
 export class Doc {
   public id: number;
   public title: string;

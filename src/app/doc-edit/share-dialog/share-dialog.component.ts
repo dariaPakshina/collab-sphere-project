@@ -1,25 +1,27 @@
-import { Component, EventEmitter, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
+import { Component, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
 import {
   MatDialog,
   MatDialogActions,
   MatDialogContent,
   MatDialogRef,
   MatDialogTitle,
-} from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { RealtimeService } from '../../realtime.service';
-import { NgIf } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
-import { Clipboard } from '@angular/cdk/clipboard';
+} from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { RealtimeService } from "../../realtime.service";
+import { NgIf } from "@angular/common";
+import { MatIcon } from "@angular/material/icon";
+import { Clipboard } from "@angular/cdk/clipboard";
+
+// dialog window for sharing document
 
 @Component({
-  selector: 'app-share-dialog',
+  selector: "app-share-dialog",
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule],
-  template: '',
+  template: "",
 })
 export class ShareDialogComponent {
   readonly dialog = inject(MatDialog);
@@ -28,15 +30,15 @@ export class ShareDialogComponent {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {});
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
+      console.log("The dialog was closed");
     });
   }
 }
 
 @Component({
-  selector: 'dialog-overview-example-dialog',
+  selector: "dialog-overview-example-dialog",
   standalone: true,
-  templateUrl: './share-dialog.component.html',
+  templateUrl: "./share-dialog.component.html",
   imports: [
     MatFormFieldModule,
     MatInputModule,
@@ -49,7 +51,7 @@ export class ShareDialogComponent {
     MatDialogActions,
     NgIf,
   ],
-  styleUrl: './share-dialog.component.scss',
+  styleUrl: "./share-dialog.component.scss",
 })
 export class DialogOverviewExampleDialog {
   readonly dialogRef = inject(MatDialogRef<DialogOverviewExampleDialog>);
@@ -61,12 +63,12 @@ export class DialogOverviewExampleDialog {
     this.dialogRef.close();
   }
 
-  userId = '';
-  exactLengthPattern = '^.{36}$';
+  userId = "";
+  exactLengthPattern = "^.{36}$";
   currentURL = window.location.href;
 
   onShareChild() {
-    console.log('share btn clicked', this.userId);
+    console.log("share btn clicked", this.userId);
     this.realtimeService.onDialogShare(this.userId);
     this.dialogRef.close();
   }

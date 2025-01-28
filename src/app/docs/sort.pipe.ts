@@ -1,6 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { orderBy } from 'lodash';
 
+// lodash sorting documents pipe
+
 @Pipe({
   name: 'sort',
   standalone: true,

@@ -19,12 +19,13 @@ import { DocsService } from "../docs/docs.service";
 import { Subscription } from "rxjs";
 import { NgIf } from "@angular/common";
 import { ChangeDetectorRef } from "@angular/core";
-import { DocCardComponent } from "../docs/doc-card/doc-card.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { RealtimeService } from "../realtime.service";
 import { ShareDialogComponent } from "./share-dialog/share-dialog.component";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { SharedNavDocEditComponent } from "./shared-nav-doc-edit/shared-nav-doc-edit.component";
+
+// document editing logic, sharing mode, saving and leaving
 
 @Component({
   selector: "app-doc-edit",

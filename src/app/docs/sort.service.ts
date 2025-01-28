@@ -1,4 +1,6 @@
-import { Injectable, ViewChild } from '@angular/core';
+import { Injectable } from '@angular/core';
+
+// 'sort by' options for sorting documents on dashboard
 
 @Injectable({
   providedIn: 'root',

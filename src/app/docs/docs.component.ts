@@ -12,6 +12,8 @@ import { SortPipe } from './sort.pipe';
 import { SortService } from './sort.service';
 import { RouterModule, RouterOutlet } from '@angular/router';
 
+// displaying documents on dashboard
+
 @Component({
   selector: 'app-docs',
   standalone: true,

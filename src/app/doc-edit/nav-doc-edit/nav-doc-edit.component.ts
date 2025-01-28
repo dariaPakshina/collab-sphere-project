@@ -10,6 +10,8 @@ import { RealtimeService } from "../../realtime.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ApiService } from "../../api.service";
 
+// navbar functionality in document editing
+
 @Component({
   selector: "app-nav-doc-edit",
   templateUrl: "./nav-doc-edit.component.html",

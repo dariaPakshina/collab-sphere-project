@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
@@ -8,9 +8,10 @@ import { SortService } from '../sort.service';
 import { NgIf } from '@angular/common';
 import { DocsService } from '../docs.service';
 import { ApiService } from '../../api.service';
-import { DocCardComponent } from '../doc-card/doc-card.component';
 import { AuthService } from '../../auth/auth.service';
 import { Clipboard } from '@angular/cdk/clipboard';
+
+// dashboard navbar functionality
 
 @Component({
   selector: 'app-nav-docs',

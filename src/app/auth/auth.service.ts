@@ -3,6 +3,8 @@ import { ApiService } from '../api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, throwError } from 'rxjs';
 
+// supabase authentication & authorization logic
+
 export class AuthResponseData {
   data: object;
   session: any;

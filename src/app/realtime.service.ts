@@ -5,6 +5,8 @@ import { RealtimeChannel } from '@supabase/supabase-js';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from './auth/auth.service';
 
+// supabase realtime functionality (document sharing and simultaneous editing)
+
 @Injectable({
   providedIn: 'root',
 })

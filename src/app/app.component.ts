@@ -12,6 +12,8 @@ import { NavDocEditComponent } from './doc-edit/nav-doc-edit/nav-doc-edit.compon
 import { DocsComponent } from './docs/docs.component';
 import { AuthService } from './auth/auth.service';
 
+// auto login when page init
+
 @Component({
   selector: 'app-root',
   standalone: true,

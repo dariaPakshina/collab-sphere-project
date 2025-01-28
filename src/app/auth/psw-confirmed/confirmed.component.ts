@@ -28,6 +28,8 @@ import { AuthService } from '../auth.service';
 import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
+// setting new password
+
 @Component({
   selector: 'app-confirmed',
   standalone: true,

@@ -3,6 +3,8 @@ import { Doc } from './doc.model';
 import { createClient } from '@supabase/supabase-js';
 import { DocsService } from './docs/docs.service';
 
+// supabase database connection, storing & retreiving documents
+
 @Injectable({
   providedIn: 'root',
 })

@@ -10,6 +10,8 @@ import {
 } from '@angular/material/dialog';
 import { ApiService } from '../../../api.service';
 
+// document card deleting logic with dialog window
+
 @Component({
   selector: 'app-delete-window',
   standalone: true,

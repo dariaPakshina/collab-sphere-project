@@ -22,6 +22,8 @@ import {
 import { DocsService } from '../docs.service';
 import { Subscription } from 'rxjs';
 
+// displaying document cards on dashboards, with ids
+
 @Component({
   selector: 'app-doc-card',
   standalone: true,

@@ -1,5 +1,5 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+import { Component, EventEmitter, inject, Output } from "@angular/core";
+import { MatButtonModule } from "@angular/material/button";
 import {
   MatDialog,
   MatDialogActions,
@@ -7,20 +7,16 @@ import {
   MatDialogContent,
   MatDialogRef,
   MatDialogTitle,
-} from '@angular/material/dialog';
+} from "@angular/material/dialog";
+
+// logic for navigating somewhere from document editing
 
 @Component({
-  selector: 'app-navigate',
+  selector: "app-navigate",
   standalone: true,
-  imports: [
-    MatButtonModule,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogContent,
-    MatDialogTitle,
-  ],
-  template: '',
-  styleUrl: './navigate.component.scss',
+  imports: [MatButtonModule],
+  template: "",
+  styleUrl: "./navigate.component.scss",
 })
 export class NavigateComponent {
   readonly dialog = inject(MatDialog);
@@ -30,7 +26,7 @@ export class NavigateComponent {
     exitAnimationDuration: string
   ) {
     this.dialog.open(DialogAnimationsExampleDialog, {
-      width: '400px',
+      width: "400px",
       enterAnimationDuration,
       exitAnimationDuration,
     });
@@ -38,8 +34,8 @@ export class NavigateComponent {
 }
 
 @Component({
-  selector: 'dialog-animations-example-dialog',
-  templateUrl: 'navigate.component.html',
+  selector: "dialog-animations-example-dialog",
+  templateUrl: "navigate.component.html",
   standalone: true,
   imports: [
     MatButtonModule,

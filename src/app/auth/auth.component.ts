@@ -18,6 +18,8 @@ import { merge } from 'rxjs';
 import { NgIf } from '@angular/common';
 import { DisabledDirective } from './disabled.directive';
 
+// authentication & authorization logic via service
+
 @Component({
   selector: 'app-auth',
   standalone: true,
