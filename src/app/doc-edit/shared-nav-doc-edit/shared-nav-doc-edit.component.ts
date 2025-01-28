@@ -7,8 +7,6 @@ import { DocsService } from "../../docs/docs.service";
 import { RealtimeService } from "../../realtime.service";
 import { ApiService } from "../../api.service";
 
-// navbar functionality in document editing (shared mode)
-
 @Component({
   selector: "app-shared-nav-doc-edit",
   standalone: true,
@@ -16,6 +14,9 @@ import { ApiService } from "../../api.service";
   templateUrl: "./shared-nav-doc-edit.component.html",
   styleUrl: "./shared-nav-doc-edit.component.scss",
 })
+/**
+ * navbar functionality in document editing (shared mode)
+ */
 export class SharedNavDocEditComponent {
   constructor(
     private router: Router,

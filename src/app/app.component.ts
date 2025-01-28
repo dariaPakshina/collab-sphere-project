@@ -12,8 +12,6 @@ import { NavDocEditComponent } from './doc-edit/nav-doc-edit/nav-doc-edit.compon
 import { DocsComponent } from './docs/docs.component';
 import { AuthService } from './auth/auth.service';
 
-// auto login when page init
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -26,6 +24,9 @@ import { AuthService } from './auth/auth.service';
   ],
   templateUrl: './app.component.html',
 })
+/**
+ * auto login when page init
+ */
 export class AppComponent implements OnInit {
   authService = inject(AuthService);
   title = 'CollabSphere';

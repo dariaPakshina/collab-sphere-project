@@ -11,8 +11,6 @@ import { ApiService } from '../../api.service';
 import { AuthService } from '../../auth/auth.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 
-// dashboard navbar functionality
-
 @Component({
   selector: 'app-nav-docs',
   standalone: true,
@@ -27,6 +25,9 @@ import { Clipboard } from '@angular/cdk/clipboard';
   templateUrl: './nav-docs.component.html',
   styleUrl: './nav-docs.component.scss',
 })
+/**
+ * dashboard navbar functionality
+ */
 export class NavDocsComponent {
   constructor(
     public sortService: SortService,

@@ -25,8 +25,6 @@ import { ShareDialogComponent } from "./share-dialog/share-dialog.component";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { SharedNavDocEditComponent } from "./shared-nav-doc-edit/shared-nav-doc-edit.component";
 
-// document editing logic, sharing mode, saving and leaving
-
 @Component({
   selector: "app-doc-edit",
   standalone: true,
@@ -48,6 +46,9 @@ import { SharedNavDocEditComponent } from "./shared-nav-doc-edit/shared-nav-doc-
     { provide: MAT_DIALOG_DATA, useValue: {} },
   ],
 })
+/**
+ * document editing logic, sharing mode, saving and leaving
+ */
 export class DocEditComponent implements OnInit, OnDestroy, AfterViewInit {
   addForm: FormGroup = new FormGroup({});
   editMode = false;

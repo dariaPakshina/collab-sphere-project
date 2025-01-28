@@ -12,8 +12,6 @@ import { SortPipe } from './sort.pipe';
 import { SortService } from './sort.service';
 import { RouterModule, RouterOutlet } from '@angular/router';
 
-// displaying documents on dashboard
-
 @Component({
   selector: 'app-docs',
   standalone: true,
@@ -31,6 +29,9 @@ import { RouterModule, RouterOutlet } from '@angular/router';
   templateUrl: './docs.component.html',
   styleUrls: ['./docs.component.scss', './media-queries.scss'],
 })
+/**
+ * displaying documents on dashboard
+ */
 export class DocsComponent implements OnInit, OnDestroy {
   docs!: Doc[];
   subscription!: Subscription;

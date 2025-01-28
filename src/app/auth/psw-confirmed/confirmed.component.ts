@@ -28,8 +28,6 @@ import { AuthService } from '../auth.service';
 import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
-// setting new password
-
 @Component({
   selector: 'app-confirmed',
   standalone: true,
@@ -54,6 +52,10 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './confirmed.component.html',
   styleUrl: './confirmed.component.scss',
 })
+
+/**
+ * setting new password
+ */
 export class ConfirmedComponent implements OnInit {
   router = inject(Router);
   activatedRoute = inject(ActivatedRoute);

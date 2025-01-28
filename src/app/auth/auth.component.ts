@@ -18,8 +18,6 @@ import { merge } from 'rxjs';
 import { NgIf } from '@angular/common';
 import { DisabledDirective } from './disabled.directive';
 
-// authentication & authorization logic via service
-
 @Component({
   selector: 'app-auth',
   standalone: true,
@@ -37,6 +35,10 @@ import { DisabledDirective } from './disabled.directive';
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
 })
+
+/**
+ * authentication & authorization logic via service
+ */
 export class AuthComponent implements OnInit {
   authService = inject(AuthService);
 

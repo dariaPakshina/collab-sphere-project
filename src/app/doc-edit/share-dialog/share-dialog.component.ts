@@ -15,14 +15,15 @@ import { NgIf } from "@angular/common";
 import { MatIcon } from "@angular/material/icon";
 import { Clipboard } from "@angular/cdk/clipboard";
 
-// dialog window for sharing document
-
 @Component({
   selector: "app-share-dialog",
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule],
   template: "",
 })
+/**
+ * dialog window for sharing document
+ */
 export class ShareDialogComponent {
   readonly dialog = inject(MatDialog);
 

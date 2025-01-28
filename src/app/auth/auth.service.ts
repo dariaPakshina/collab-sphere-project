@@ -3,8 +3,6 @@ import { ApiService } from '../api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, throwError } from 'rxjs';
 
-// supabase authentication & authorization logic
-
 export class AuthResponseData {
   data: object;
   session: any;
@@ -18,6 +16,9 @@ export class AuthResponseData {
 @Injectable({
   providedIn: 'root',
 })
+/**
+ * supabase authentication & authorization logic
+ */
 export class AuthService {
   apiService = inject(ApiService);
   supabase = this.apiService.supabase;

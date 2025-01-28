@@ -3,8 +3,6 @@ import { Component } from '@angular/core';
 import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
-// email confirmed message
-
 @Component({
   selector: 'app-email-confirmed',
   standalone: true,
@@ -12,4 +10,8 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   templateUrl: './email-confirmed.component.html',
   styleUrl: './email-confirmed.component.scss',
 })
+
+/**
+ * email confirmed message
+ */
 export class EmailConfirmedComponent {}

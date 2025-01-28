@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Doc } from '../doc.model';
 
-// managing inner document storage, retreived from supabase
-
 @Injectable({
   providedIn: 'root',
 })
+/**
+ * managing inner document storage, retreived from supabase
+ */
 export class DocsService {
   docsChanged = new Subject<Doc[]>();
   docChanged = new Subject<Doc>();

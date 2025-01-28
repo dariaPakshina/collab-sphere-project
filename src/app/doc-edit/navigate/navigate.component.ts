@@ -9,8 +9,6 @@ import {
   MatDialogTitle,
 } from "@angular/material/dialog";
 
-// logic for navigating somewhere from document editing
-
 @Component({
   selector: "app-navigate",
   standalone: true,
@@ -18,6 +16,9 @@ import {
   template: "",
   styleUrl: "./navigate.component.scss",
 })
+/**
+ * logic for navigating somewhere from document editing
+ */
 export class NavigateComponent {
   readonly dialog = inject(MatDialog);
 

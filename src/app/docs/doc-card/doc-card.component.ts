@@ -22,8 +22,6 @@ import {
 import { DocsService } from '../docs.service';
 import { Subscription } from 'rxjs';
 
-// displaying document cards on dashboards, with ids
-
 @Component({
   selector: 'app-doc-card',
   standalone: true,
@@ -43,6 +41,9 @@ import { Subscription } from 'rxjs';
   templateUrl: './doc-card.component.html',
   styleUrl: './doc-card.component.scss',
 })
+/**
+ * displaying document cards on dashboards, with ids
+ */
 export class DocCardComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() doc!: Doc;
   @Input() index!: number;

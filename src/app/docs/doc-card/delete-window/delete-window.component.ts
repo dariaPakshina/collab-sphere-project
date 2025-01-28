@@ -10,8 +10,6 @@ import {
 } from '@angular/material/dialog';
 import { ApiService } from '../../../api.service';
 
-// document card deleting logic with dialog window
-
 @Component({
   selector: 'app-delete-window',
   standalone: true,
@@ -25,6 +23,9 @@ import { ApiService } from '../../../api.service';
   template: '',
   styleUrl: './delete-window.component.scss',
 })
+/**
+ * document card deleting logic with dialog window
+ */
 export class DeleteWindowComponent {
   readonly dialog = inject(MatDialog);
 
